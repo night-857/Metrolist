@@ -25,6 +25,7 @@ import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
+import com.materialkolor.quantize.QuantizerCelebi
 
 val DefaultThemeColor = Color(0xFFED5564)
 
@@ -71,12 +72,13 @@ fun MetrolistTheme(
 }
 
 fun Bitmap.extractThemeColor(): Color {
-    val colorsToPopulation = Palette.from(this)
-        .maximumColorCount(128)
-        .generate()
-        .swatches
-        .associate { it.rgb to it.population }
+    val scaledBitmap = Bitmap.createScaledBitmap(this, 112, 112, true)
+    val pixels = IntArray(scaledBitmap.width * scaledBitmap.height)
+    scaledBitmap.getPixels(pixels, 0, scaledBitmap.width, 0, 0, scaledBitmap.width, scaledBitmap.height)
+
+    val colorsToPopulation = QuantizerCelebi.quantize(pixels, 128)
     val rankedColors = Score.score(colorsToPopulation)
+    
     return Color(rankedColors.first())
 }
 
