@@ -507,15 +507,15 @@ fun BottomSheetPlayer(
 
                     PlayerButtonsStyle.PRIMARY -> {
                         Pair(
-                            MaterialTheme.colorScheme.primaryContainer,
-                            MaterialTheme.colorScheme.onPrimaryContainer,
+                            MaterialTheme.colorScheme.tertiaryContainer,
+                            MaterialTheme.colorScheme.onTertiaryContainer,
                         )
                     }
 
                     PlayerButtonsStyle.TERTIARY -> {
                         Pair(
-                            MaterialTheme.colorScheme.tertiaryContainer,
-                            MaterialTheme.colorScheme.onTertiaryContainer,
+                            MaterialTheme.colorScheme.primaryContainer,
+                            MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                 }
@@ -532,15 +532,15 @@ fun BottomSheetPlayer(
 
                     PlayerButtonsStyle.PRIMARY -> {
                         Pair(
-                            MaterialTheme.colorScheme.primaryContainer,
-                            MaterialTheme.colorScheme.onPrimaryContainer,
+                            MaterialTheme.colorScheme.tertiaryContainer,
+                            MaterialTheme.colorScheme.onTertiaryContainer,
                         )
                     }
 
                     PlayerButtonsStyle.TERTIARY -> {
                         Pair(
-                            MaterialTheme.colorScheme.tertiaryContainer,
-                            MaterialTheme.colorScheme.onTertiaryContainer,
+                            MaterialTheme.colorScheme.primaryContainer,
+                            MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                 }
