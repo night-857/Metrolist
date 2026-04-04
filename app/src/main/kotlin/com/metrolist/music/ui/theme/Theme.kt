@@ -72,7 +72,7 @@ fun MetrolistTheme(
 
 fun Bitmap.extractThemeColor(): Color {
     val colorsToPopulation = Palette.from(this)
-        .maximumColorCount(8)
+        .maximumColorCount(128)
         .generate()
         .swatches
         .associate { it.rgb to it.population }
