@@ -37,32 +37,36 @@ fun MetrolistTheme(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
+    // Determine if system dynamic colors should be used (Android S+ and default theme color)
     val useSystemDynamicColor = (themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 
-    val colorScheme = remember(themeColor, darkTheme, pureBlack) {
-        val base = if (useSystemDynamicColor) {
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        } else {
-            
-            val hct = com.materialkolor.hct.Hct.fromInt(themeColor.toArgb())
-            val scheme = SchemeCmf(
-                sourceColorHct = hct,
-                isDark = darkTheme,
-                contrastLevel = 0.0
-            )
-            com.materialkolor.dynamiccolor.MaterialDynamicColors().toColorScheme(scheme)
-        }
+    // Select the appropriate color scheme generation method
+    val baseColorScheme = if (useSystemDynamicColor) {
+        // Use standard Material 3 dynamic color functions for system wallpaper colors
+        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } else {
+        // Use materialKolor only when a specific seed color is provided
+        rememberDynamicColorScheme(
+            seedColor = themeColor, // themeColor is guaranteed non-default here
+            isDark = darkTheme,
+            specVersion = ColorSpec.SpecVersion.SPEC_2025,
+            style = PaletteStyle.Vibrant // Keep existing style
+        )
+    }
 
+    // Apply pureBlack modification if needed, similar to original logic
+    val colorScheme = remember(baseColorScheme, pureBlack, darkTheme) {
         if (darkTheme && pureBlack) {
-            base.pureBlack(true)
+            baseColorScheme.pureBlack(true)
         } else {
-            base
+            baseColorScheme
         }
     }
 
+    // Use standard MaterialTheme instead of MaterialExpressiveTheme
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography,
+        typography = AppTypography, // Use the defined AppTypography
         content = content
     )
 }
