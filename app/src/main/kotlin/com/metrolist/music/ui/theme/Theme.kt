@@ -49,8 +49,8 @@ fun MetrolistTheme(
         rememberDynamicColorScheme(
             seedColor = themeColor, // themeColor is guaranteed non-default here
             isDark = darkTheme,
-            specVersion = ColorSpec.SpecVersion.SPEC_2025,
-            style = PaletteStyle.Vibrant // Keep existing style
+            specVersion = ColorSpec.SpecVersion.SPEC_2021,
+            style = PaletteStyle.Content // Keep existing style
         )
     }
 
