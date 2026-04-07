@@ -26,7 +26,7 @@ import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
 import com.materialkolor.quantize.QuantizerCelebi
-import com.materialkolor.dynamiccolor.Hct
+import com.materialkolor.hct.Hct
 
 val DefaultThemeColor = Color(0xFFED5564)
 
