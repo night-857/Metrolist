@@ -26,7 +26,6 @@ import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
 import com.materialkolor.quantize.QuantizerCelebi
-import com.materialkolor.hct.Hct
 
 val DefaultThemeColor = Color(0xFFED5564)
 
@@ -84,23 +83,19 @@ fun Bitmap.extractThemeColor(): Color {
 }
 
 fun Bitmap.extractGradientColors(): List<Color> {
-    val scaledBitmap = Bitmap.createScaledBitmap(this, 112, 112, true)
-    val pixels = IntArray(scaledBitmap.width * scaledBitmap.height)
-    scaledBitmap.getPixels(pixels, 0, scaledBitmap.width, 0, 0, scaledBitmap.width, scaledBitmap.height)
-    
-    val colorsToPopulation = QuantizerCelebi.quantize(pixels, 128)
-    val rankedColors = Score.score(colorsToPopulation)
-    
-    val seedColor = if (rankedColors.isNotEmpty()) rankedColors.first() else DefaultThemeColor.toArgb()
+    val extractedColors = Palette.from(this)
+        .maximumColorCount(64)
+        .generate()
+        .swatches
+        .associate { it.rgb to it.population }
 
-    val hct = Hct.fromInt(seedColor)
-    val hue = hct.hue
-    val chroma = hct.chroma.coerceAtMost(38.0)
+    val orderedColors = Score.score(extractedColors, 2, 0xff4285f4.toInt(), true)
+        .sortedByDescending { Color(it).luminance() }
 
-    val colorSurfaceBright = Color(Hct.from(hue, chroma, 18.0).toInt())
-    val colorSurface = Color(Hct.from(hue, chroma, 4.0).toInt())
-
-    return listOf(colorSurfaceBright, colorSurface)
+    return if (orderedColors.size >= 2)
+        listOf(Color(orderedColors[0]), Color(orderedColors[1]))
+    else
+        listOf(Color(0xFF595959), Color(0xFF0D0D0D))
 }
 
 fun ColorScheme.pureBlack(apply: Boolean) =
