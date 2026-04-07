@@ -1844,82 +1844,57 @@ fun BottomSheetPlayer(
                 }
             }
 
-                    else -> {
-            val bottomPadding by animateDpAsState(
-                targetValue = if (isFullScreen) 0.dp else queueSheetState.collapsedBound,
-                label = "bottomPadding",
-            )
-
-            BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
-                    .padding(bottom = bottomPadding)
-            ) {
-                val totalHeight = maxHeight
-                val thumbnailHeight = totalHeight * 0.6f 
-                
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(thumbnailHeight)
-                        .align(Alignment.TopCenter)
-                ) {
-                    val currentSliderPosition by rememberUpdatedState(sliderPosition)
-                    val sliderPositionProvider = remember { { currentSliderPosition } }
-                    val isExpandedProvider = remember(state) { { state.isExpanded } }
-
-                    AnimatedContent(
-                        targetState = showInlineLyrics,
-                        label = "Lyrics",
-                        transitionSpec = { fadeIn() togetherWith fadeOut() },
-                    ) { showLyrics ->
-                        if (showLyrics) {
-                            InlineLyricsView(
-                                mediaMetadata = mediaMetadata,
-                                showLyrics = showLyrics,
-                                positionProvider = { effectivePosition },
-                            )
-                        } else {
-                            Thumbnail(
-                                sliderPositionProvider = sliderPositionProvider,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .nestedScroll(state.preUpPostDownNestedScrollConnection),
-                                isPlayerExpanded = isExpandedProvider,
-                                isListenTogetherGuest = isListenTogetherGuest,
-                            )
-                        }
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colorStops = arrayOf(
-                                    0.0f to Color.Transparent,
-                                    0.50f to Color.Transparent,
-                                    0.60f to bottomSheetBackgroundColor,
-                                    1.0f to bottomSheetBackgroundColor
-                                )
-                            )
-                        )
+            else -> {
+                val bottomPadding by animateDpAsState(
+                    targetValue = if (isFullScreen) 0.dp else queueSheetState.collapsedBound,
+                    label = "bottomPadding",
                 )
-
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 30.dp)
+                    modifier =
+                        Modifier
+                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
+                            .padding(bottom = bottomPadding)
+                            .animateContentSize(),
                 ) {
-                    mediaMetadata?.let { controlsContent(it) }
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        // Remember lambdas to prevent unnecessary recomposition
+                        val currentSliderPosition by rememberUpdatedState(sliderPosition)
+                        val sliderPositionProvider = remember { { currentSliderPosition } }
+                        val isExpandedProvider = remember(state) { { state.isExpanded } }
+                        AnimatedContent(
+                            targetState = showInlineLyrics,
+                            label = "Lyrics",
+                            transitionSpec = { fadeIn() togetherWith fadeOut() },
+                        ) { showLyrics ->
+                            if (showLyrics) {
+                                InlineLyricsView(
+                                    mediaMetadata = mediaMetadata,
+                                    showLyrics = showLyrics,
+                                    positionProvider = { effectivePosition },
+                                )
+                            } else {
+                                Thumbnail(
+                                    sliderPositionProvider = sliderPositionProvider,
+                                    modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection),
+                                    isPlayerExpanded = isExpandedProvider,
+                                    isListenTogetherGuest = isListenTogetherGuest,
+                                )
+                            }
+                        }
+                    }
+
+                    mediaMetadata?.let {
+                        controlsContent(it)
+                    }
+
+                    Spacer(Modifier.height(30.dp))
                 }
             }
         }
-
 
         AnimatedVisibility(
             visible = !isFullScreen,
