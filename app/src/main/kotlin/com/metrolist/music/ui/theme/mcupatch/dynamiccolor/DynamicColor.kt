@@ -15,10 +15,10 @@
  */
 package com.metrolist.music.ui.theme.mcupatch.dynamiccolor
 
-import com.materialkolor.com.contrast.Contrast
+import com.materialkolor.contrast.Contrast
 import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.ColorSpec.SpecVersion
-import com.materialkolor.com.hct.Hct
-import com.materialkolor.com.palettes.TonalPalette
+import com.materialkolor.hct.Hct
+import com.materialkolor.palettes.TonalPalette
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
