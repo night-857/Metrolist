@@ -15,12 +15,12 @@
  */
 package com.metrolist.music.ui.theme.mcupatch.dynamiccolor
 
-import com.materialkolor.com.contrast.Contrast
+import com.materialkolor.contrast.Contrast
 import com.metrolist.music.ui.theme.mcupatch.scheme.DynamicScheme.Platform
-import com.materialkolor.com.dynamiccolor.ToneDeltaPair.DeltaConstraint
-import com.materialkolor.com.dynamiccolor.ToneDeltaPair.TonePolarity
-import com.materialkolor.com.hct.Hct
-import com.materialkolor.com.palettes.TonalPalette
+import com.materialkolor.dynamiccolor.ToneDeltaPair.DeltaConstraint
+import com.materialkolor.dynamiccolor.ToneDeltaPair.TonePolarity
+import com.materialkolor.hct.Hct
+import com.materialkolor.palettes.TonalPalette
 import kotlin.math.max
 import kotlin.math.min
 
