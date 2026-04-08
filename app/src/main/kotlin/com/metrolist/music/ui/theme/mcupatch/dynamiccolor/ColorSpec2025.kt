@@ -16,7 +16,7 @@
 package com.metrolist.music.ui.theme.mcupatch.dynamiccolor
 
 import com.materialkolor.contrast.Contrast
-import com.metrolist.music.ui.theme.mcupatch.scheme.DynamicScheme.Platform
+import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.DynamicScheme.Platform
 import com.materialkolor.dynamiccolor.ToneDeltaPair.DeltaConstraint
 import com.materialkolor.dynamiccolor.ToneDeltaPair.TonePolarity
 import com.materialkolor.hct.Hct
