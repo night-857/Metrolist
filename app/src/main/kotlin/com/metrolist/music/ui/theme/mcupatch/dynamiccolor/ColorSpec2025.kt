@@ -17,8 +17,8 @@ package com.metrolist.music.ui.theme.mcupatch.dynamiccolor
 
 import com.materialkolor.contrast.Contrast
 import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.DynamicScheme.Platform
-import com.materialkolor.dynamiccolor.ToneDeltaPair.DeltaConstraint
-import com.materialkolor.dynamiccolor.ToneDeltaPair.TonePolarity
+import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.ToneDeltaPair.DeltaConstraint
+import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.ToneDeltaPair.TonePolarity
 import com.materialkolor.hct.Hct
 import com.materialkolor.palettes.TonalPalette
 import kotlin.math.max
