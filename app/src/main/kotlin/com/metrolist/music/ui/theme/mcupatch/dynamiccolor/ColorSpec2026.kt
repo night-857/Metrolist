@@ -15,8 +15,8 @@
  */
 package com.metrolist.music.ui.theme.mcupatch.dynamiccolor
 
-import com.materialkolor.com.hct.Hct
-import com.materialkolor.com.palettes.TonalPalette
+import com.materialkolor.hct.Hct
+import com.materialkolor.palettes.TonalPalette
 
 open class ColorSpec2026 : ColorSpec2025() {
 
