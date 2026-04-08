@@ -15,15 +15,15 @@
  */
 package com.metrolist.music.ui.theme.mcupatch.dynamiccolor
 
-import com.materialkolor.com.contrast.Contrast
-import com.materialkolor.com.dislike.DislikeAnalyzer
-import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.DynamicScheme.Platform
-import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.ToneDeltaPair.DeltaConstraint
-import com.materialkolor.com.dynamiccolor.ToneDeltaPair.TonePolarity
-import com.materialkolor.com.hct.Hct
-import com.materialkolor.com.palettes.TonalPalette
-import com.materialkolor.com.temperature.TemperatureCache
-import com.materialkolor.com.utils.MathUtils
+import com.materialkolor.contrast.Contrast
+import com.materialkolor.dislike.DislikeAnalyzer
+import com.metrolist.music.ui.theme.mcupatch.scheme.DynamicScheme.Platform
+import com.materialkolor.dynamiccolor.ToneDeltaPair.DeltaConstraint
+import com.materialkolor.dynamiccolor.ToneDeltaPair.TonePolarity
+import com.materialkolor.hct.Hct
+import com.materialkolor.palettes.TonalPalette
+import com.materialkolor.temperature.TemperatureCache
+import com.materialkolor.utils.MathUtils
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
