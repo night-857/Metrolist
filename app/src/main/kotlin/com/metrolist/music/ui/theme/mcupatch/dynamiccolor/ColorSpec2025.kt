@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-com.metrolist.music.ui.theme.mcupatch.dynamiccolor
+package com.metrolist.music.ui.theme.mcupatch.dynamiccolor
 
 import com.materialkolor.com.contrast.Contrast
 import com.metrolist.music.ui.theme.mcupatch.scheme.DynamicScheme.Platform
