@@ -16,8 +16,8 @@
 package com.metrolist.music.ui.theme.mcupatch.scheme
 
 import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.ColorSpec.SpecVersion
-import com.materialkolor.dynamiccolor.DynamicColor
-import com.materialkolor.dynamiccolor.MaterialDynamicColors
+import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.DynamicColor
+import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.MaterialDynamicColors
 import com.materialkolor.hct.Hct
 import com.materialkolor.palettes.TonalPalette
 import com.materialkolor.utils.MathUtils
