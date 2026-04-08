@@ -15,10 +15,9 @@
  */
 package com.metrolist.music.ui.theme.mcupatch.dynamiccolor
 
+import com.metrolist.music.ui.theme.mcupatch.dynamiccolor.DynamicScheme.Platform
 import com.materialkolor.hct.Hct
 import com.materialkolor.palettes.TonalPalette
-import com.metrolist.music.ui.theme.mcupatch.scheme.DynamicScheme.Platform
-import com.metrolist.music.ui.theme.mcupatch.scheme.Variant
 
 /** An interface defining all the necessary methods that could be different between specs. */
 interface ColorSpec {
