@@ -642,7 +642,6 @@ fun VariantPill(
                 onClick = onClick
             )
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        contentAlignment = Alignment.Center
     ) {
         Text(
             text = style.name.replace("_", " "),
