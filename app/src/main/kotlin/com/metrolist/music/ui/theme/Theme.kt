@@ -5,6 +5,8 @@
 
 package com.metrolist.music.ui.theme
 
+import com.metrolist.music.constants.PaletteStyleKey
+import com.metrolist.music.utils.rememberPreference
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -27,6 +29,7 @@ import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
 import com.materialkolor.quantize.QuantizerCelebi
 
+
 val DefaultThemeColor = Color(0xFFED5564)
 
 @Composable
@@ -40,6 +43,14 @@ fun MetrolistTheme(
     // Determine if system dynamic colors should be used (Android S+ and default theme color)
     val useSystemDynamicColor = (themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 
+    val (paletteStyleString, _) = rememberPreference(
+    PaletteStyleKey,
+    defaultValue = PaletteStyle.TonalSpot.name
+)
+    
+    val paletteStyle = PaletteStyle.entries.find { it.name == paletteStyleString }
+    ?: PaletteStyle.TonalSpot
+    
     // Select the appropriate color scheme generation method
     val baseColorScheme = if (useSystemDynamicColor) {
         // Use standard Material 3 dynamic color functions for system wallpaper colors
@@ -50,7 +61,7 @@ fun MetrolistTheme(
             seedColor = themeColor, // themeColor is guaranteed non-default here
             isDark = darkTheme,
             specVersion = ColorSpec.SpecVersion.SPEC_2021,
-            style = PaletteStyle.Content // Keep existing style
+            style = paletteStyle // Keep existing style
         )
     }
 
