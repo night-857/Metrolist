@@ -562,10 +562,14 @@ fun ModeCircle(
 fun VariantSelector() {
     val paletteStyles = listOf(
         PaletteStyle.TonalSpot,
+        PaletteStyle.Neutral,
         PaletteStyle.Vibrant,
         PaletteStyle.Expressive,
         PaletteStyle.Rainbow,
-        PaletteStyle.FruitSalad
+        PaletteStyle.FruitSalad,
+        PaletteStyle.Content,
+        PaletteStyle.Fidelity,
+        PaletteStyle.Monochrome
     )
 
     val (selectedStyleString, setSelectedStyleString) = rememberPreference(
