@@ -83,7 +83,6 @@ import com.metrolist.music.constants.PaletteStyleKey
 import com.metrolist.music.constants.PureBlackKey
 import com.metrolist.music.constants.PureBlackMiniPlayerKey
 import com.metrolist.music.constants.SelectedThemeColorKey
-import com.metrolist.music.constants.PaletteStyleKey
 import com.metrolist.music.ui.theme.DefaultThemeColor
 import com.metrolist.music.ui.theme.MetrolistTheme
 import com.metrolist.music.utils.rememberEnumPreference
@@ -662,7 +661,7 @@ fun PaletteItem(
     val colorScheme = rememberDynamicColorScheme(
         seedColor = palette.seedColor,
         isDark = isSystemDark,
-        style = paletteStyle
+        style = PaletteStyle.TonalSpot
     )
     
     val cornerRadius by animateDpAsState(
