@@ -81,6 +81,7 @@ import com.metrolist.music.constants.DynamicThemeKey
 import com.metrolist.music.constants.PureBlackKey
 import com.metrolist.music.constants.PureBlackMiniPlayerKey
 import com.metrolist.music.constants.SelectedThemeColorKey
+import com.metrolist.music.constants.PaletteStyleKey
 import com.metrolist.music.ui.theme.DefaultThemeColor
 import com.metrolist.music.ui.theme.MetrolistTheme
 import com.metrolist.music.utils.rememberEnumPreference
@@ -415,7 +416,7 @@ fun ThemeControls(
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
     Text(
-        text = "Color style",
+        text = "Color Style",
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.onSurface
     )
@@ -567,7 +568,16 @@ fun VariantSelector() {
         PaletteStyle.FruitSalad
     )
 
-    var selected by remember { mutableStateOf(PaletteStyle.TonalSpot) }
+    val (selectedStyleString, setSelectedStyleString) = rememberPreference(
+        PaletteStyleKey,
+        defaultValue = PaletteStyle.TonalSpot.name
+    )
+
+    val selected = try {
+        PaletteStyle.valueOf(selectedStyleString)
+    } catch (_: Exception) {
+        PaletteStyle.TonalSpot
+    }
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -576,7 +586,7 @@ fun VariantSelector() {
             VariantPill(
                 style = style,
                 isSelected = style == selected,
-                onClick = { selected = style }
+                onClick = { setSelectedStyleString(style.name) }
             )
         }
     }
