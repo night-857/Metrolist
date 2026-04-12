@@ -2,6 +2,7 @@ package com.metrolist.music.ui.screens.settings
 
 import android.content.res.Configuration
 import android.os.Build
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -54,6 +55,8 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -409,6 +412,16 @@ fun ThemeControls(
                     }
                 }
             }
+
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Text(
+        text = "Color style",
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onSurface
+    )
+
+    VariantSelector()
+            }
         }
     }
 }
@@ -541,6 +554,85 @@ fun ModeCircle(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun VariantSelector() {
+    val paletteStyles = listOf(
+        PaletteStyle.TonalSpot,
+        PaletteStyle.Vibrant,
+        PaletteStyle.Expressive,
+        PaletteStyle.Rainbow,
+        PaletteStyle.FruitSalad
+    )
+
+    var selected by remember { mutableStateOf(PaletteStyle.TonalSpot) }
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(paletteStyles) { style ->
+            VariantPill(
+                style = style,
+                isSelected = style == selected,
+                onClick = { selected = style }
+            )
+        }
+    }
+}
+
+@Composable
+fun VariantPill(
+    style: PaletteStyle,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val shape = RoundedCornerShape(50)
+
+    val containerColor by animateColorAsState(
+        targetValue = if (isSelected)
+            MaterialTheme.colorScheme.primaryContainer
+        else
+            MaterialTheme.colorScheme.surfaceContainerHigh,
+        label = "containerColor"
+    )
+
+    val contentColor by animateColorAsState(
+        targetValue = if (isSelected)
+            MaterialTheme.colorScheme.onPrimaryContainer
+        else
+            MaterialTheme.colorScheme.onSurface,
+        label = "contentColor"
+    )
+
+    val scale by animateFloatAsState(
+        targetValue = if (isSelected) 1.05f else 1f,
+        label = "scale"
+    )
+
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Box(
+        modifier = Modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .clip(shape)
+            .background(containerColor)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = ripple(),
+                onClick = onClick
+            )
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Text(
+            text = style.name.replace("_", " "),
+            color = contentColor,
+            style = MaterialTheme.typography.labelLarge
+        )
     }
 }
 
