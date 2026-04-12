@@ -18,6 +18,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -78,6 +79,7 @@ import com.materialkolor.rememberDynamicColorScheme
 import com.metrolist.music.R
 import com.metrolist.music.constants.DarkModeKey
 import com.metrolist.music.constants.DynamicThemeKey
+import com.metrolist.music.constants.PaletteStyleKey
 import com.metrolist.music.constants.PureBlackKey
 import com.metrolist.music.constants.PureBlackMiniPlayerKey
 import com.metrolist.music.constants.SelectedThemeColorKey
@@ -304,7 +306,7 @@ fun ThemeControls(
             .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -602,11 +604,21 @@ fun VariantPill(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val shape = RoundedCornerShape(50)
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val cornerRadius by animateDpAsState(
+        targetValue = when {
+            isPressed -> 8.dp
+            isSelected -> 12.dp
+            else -> 100.dp
+        },
+        label = "cornerRadius"
+    )
 
     val containerColor by animateColorAsState(
         targetValue = if (isSelected)
-            MaterialTheme.colorScheme.primaryContainer
+            MaterialTheme.colorScheme.primary
         else
             MaterialTheme.colorScheme.surfaceContainerHigh,
         label = "containerColor"
@@ -614,33 +626,23 @@ fun VariantPill(
 
     val contentColor by animateColorAsState(
         targetValue = if (isSelected)
-            MaterialTheme.colorScheme.onPrimaryContainer
+            MaterialTheme.colorScheme.onPrimary
         else
-            MaterialTheme.colorScheme.onSurface,
+            MaterialTheme.colorScheme.onSurfaceVariant,
         label = "contentColor"
     )
 
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.05f else 1f,
-        label = "scale"
-    )
-
-    val interactionSource = remember { MutableInteractionSource() }
-
     Box(
         modifier = Modifier
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
-            .clip(shape)
+            .clip(RoundedCornerShape(cornerRadius))
             .background(containerColor)
             .clickable(
                 interactionSource = interactionSource,
                 indication = ripple(),
                 onClick = onClick
             )
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = style.name.replace("_", " "),
@@ -661,7 +663,7 @@ fun PaletteItem(
     val colorScheme = rememberDynamicColorScheme(
         seedColor = palette.seedColor,
         isDark = isSystemDark,
-        style = PaletteStyle.TonalSpot
+        style = paletteStyle
     )
     
     val cornerRadius by animateDpAsState(
