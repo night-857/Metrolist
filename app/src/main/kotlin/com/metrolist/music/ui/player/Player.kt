@@ -392,6 +392,9 @@ fun BottomSheetPlayer(
     val defaultGradientColors = listOf(MaterialTheme.colorScheme.surface, MaterialTheme.colorScheme.surfaceVariant)
     val fallbackColor = MaterialTheme.colorScheme.surface.toArgb()
 
+    var meshColors by remember { mutableStateOf<List<Color>>(listOf(Color.Black)) }
+    var gridVersion by remember { mutableIntStateOf(0) }
+    
     LaunchedEffect(mediaMetadata?.id, playerBackground) {
     if (playerBackground == PlayerBackgroundStyle.GRADIENT || playerBackground == PlayerBackgroundStyle.BLUR) {
         val currentMetadata = mediaMetadata
@@ -446,6 +449,14 @@ fun BottomSheetPlayer(
     }
 }
 
+    LaunchedEffect(meshColors) {
+        if (meshColors.size > 1) {
+            while (isActive) {
+                delay(5000)
+                gridVersion++
+            }
+        }
+    }
 
     val TextBackgroundColor by animateColorAsState(
         targetValue =
@@ -456,18 +467,6 @@ fun BottomSheetPlayer(
             },
         label = "TextBackgroundColor",
     )
-
-    var meshColors by remember { mutableStateOf<List<Color>>(listOf(Color.Black)) }
-    var gridVersion by remember { mutableIntStateOf(0) }
-
-    LaunchedEffect(meshColors) {
-        if (meshColors.size > 1) {
-            while (isActive) {
-                delay(5000)
-                gridVersion++
-            }
-        }
-    }
 
     val icBackgroundColor by animateColorAsState(
         targetValue =
