@@ -6,7 +6,8 @@ import com.materialkolor.score.Score
 
 object PlayerMeshColorExtractor {
 
-    private const val DESIRED_POOL_SIZE = 6
+    private const val DESIRED_POOL_SIZE = 15
+    private const val FALLBACK_COLOR = -0xbd7a0c
 
     fun extract(bitmap: Bitmap): List<Int> {
         val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 112, 112, true)
