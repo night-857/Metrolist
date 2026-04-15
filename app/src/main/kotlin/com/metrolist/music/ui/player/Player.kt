@@ -836,7 +836,7 @@ fun BottomSheetPlayer(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .blur(0.dp)
+                .blur(100.dp)
                 .scale(1.4f)
         ) {
             val columns = 6
