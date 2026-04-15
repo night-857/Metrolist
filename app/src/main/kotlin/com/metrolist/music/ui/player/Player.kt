@@ -816,8 +816,8 @@ fun BottomSheetPlayer(
             ) {
                 when (playerBackground) {
                     PlayerBackgroundStyle.BLUR -> {
-        val targetColors = remember(meshColors) {
-            if (meshColors.isNotEmpty()) meshColors.take(6)
+        val targetColors = remember(meshColors, gridVersion) {
+            if (meshColors.isNotEmpty()) meshColors.shuffled().take(6)
             else listOf(Color.Black.toArgb())
         }
 
@@ -831,12 +831,12 @@ fun BottomSheetPlayer(
 
         val weightedIndicesPool = remember {
             buildList {
-                repeat(50) { add(0) }
+                repeat(60) { add(0) }
                 repeat(20) { add(1) }
                 repeat(10) { add(2) }
-                repeat(10) { add(3) }
-                repeat(5)  { add(4) }
-                repeat(5)  { add(5) }
+                repeat(4) { add(3) }
+                repeat(3) { add(4) }
+                repeat(3)  { add(5) }
             }
         }
 
@@ -868,7 +868,7 @@ fun BottomSheetPlayer(
                     drawRect(
                         color = colorToDraw,
                         topLeft = Offset(col * cellWidth, row * cellHeight),
-                        size = Size(cellWidth * 1.8f, cellHeight * 1.8f)
+                        size = Size(cellWidth * 2f, cellHeight * 2f)
                     )
                 }
             }
@@ -876,11 +876,10 @@ fun BottomSheetPlayer(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.35f))
+                    .background(Color.Black.copy(alpha = 0.5f))
             )
         }
     }
-
                     
                     PlayerBackgroundStyle.GRADIENT -> {
                         AnimatedContent(
