@@ -194,7 +194,15 @@ import com.metrolist.music.utils.dataStore
 import androidx.datastore.preferences.core.edit
 import com.metrolist.music.constants.SleepTimerFadeOutKey
 import com.metrolist.music.constants.SleepTimerStopAfterCurrentSongKey
-
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.draw.scale
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.runtime.mutableIntStateOf
+import com.metrolist.music.ui.theme.PlayerMeshColorExtractor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -385,51 +393,59 @@ fun BottomSheetPlayer(
     val fallbackColor = MaterialTheme.colorScheme.surface.toArgb()
 
     LaunchedEffect(mediaMetadata?.id, playerBackground) {
-        if (playerBackground == PlayerBackgroundStyle.GRADIENT) {
-            val currentMetadata = mediaMetadata
-            if (currentMetadata != null && currentMetadata.thumbnailUrl != null) {
-                val cachedColors = gradientColorsCache[currentMetadata.id]
-                if (cachedColors != null) {
-                    gradientColors = cachedColors
-                    return@LaunchedEffect
-                }
-                withContext(Dispatchers.IO) {
-                    val request =
-                        ImageRequest
-                            .Builder(context)
-                            .data(currentMetadata.thumbnailUrl)
-                            .size(100, 100)
-                            .allowHardware(false)
-                            .memoryCacheKey("gradient_${currentMetadata.id}")
-                            .build()
+    if (playerBackground == PlayerBackgroundStyle.GRADIENT || playerBackground == PlayerBackgroundStyle.BLUR) {
+        val currentMetadata = mediaMetadata
+        if (currentMetadata != null && currentMetadata.thumbnailUrl != null) {
+            val cachedColors = gradientColorsCache[currentMetadata.id]
+            if (cachedColors != null) {
+                gradientColors = cachedColors
+                return@LaunchedEffect
+            }
+            withContext(Dispatchers.IO) {
+                val request =
+                    ImageRequest
+                        .Builder(context)
+                        .data(currentMetadata.thumbnailUrl)
+                        .size(100, 100)
+                        .allowHardware(false)
+                        .memoryCacheKey("gradient_${currentMetadata.id}")
+                        .build()
 
-                    val result = runCatching { context.imageLoader.execute(request) }.getOrNull()
-                    if (result != null) {
-                        val bitmap = result.image?.toBitmap()
-                        if (bitmap != null) {
-                            val palette =
-                                withContext(Dispatchers.Default) {
-                                    Palette
-                                        .from(bitmap)
-                                        .maximumColorCount(8)
-                                        .resizeBitmapArea(100 * 100)
-                                        .generate()
-                                }
-                            val extractedColors =
-                                PlayerColorExtractor.extractGradientColors(
-                                    palette = palette,
-                                    fallbackColor = fallbackColor,
-                                )
+                val result = runCatching { context.imageLoader.execute(request) }.getOrNull()
+                if (result != null) {
+                    val bitmap = result.image?.toBitmap()
+                    if (bitmap != null) {
+                        val extractedMesh = PlayerMeshColorExtractor.extract(bitmap)
+                        
+                        val palette =
+                            withContext(Dispatchers.Default) {
+                                Palette
+                                    .from(bitmap)
+                                    .maximumColorCount(8)
+                                    .resizeBitmapArea(100 * 100)
+                                    .generate()
+                            }
+                        val extractedColors =
+                            PlayerColorExtractor.extractGradientColors(
+                                palette = palette,
+                                fallbackColor = fallbackColor,
+                            )
+                        
+                        withContext(Dispatchers.Main) { 
+                            meshColors = extractedMesh
+                            gradientColors = extractedColors 
                             gradientColorsCache[currentMetadata.id] = extractedColors
-                            withContext(Dispatchers.Main) { gradientColors = extractedColors }
                         }
                     }
                 }
             }
-        } else {
-            gradientColors = emptyList()
         }
+    } else {
+        gradientColors = emptyList()
+        meshColors = listOf(Color.Black)
     }
+}
+
 
     val TextBackgroundColor by animateColorAsState(
         targetValue =
@@ -440,6 +456,18 @@ fun BottomSheetPlayer(
             },
         label = "TextBackgroundColor",
     )
+
+    var meshColors by remember { mutableStateOf<List<Color>>(listOf(Color.Black)) }
+    var gridVersion by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(meshColors) {
+        if (meshColors.size > 1) {
+            while (isActive) {
+                delay(5000)
+                gridVersion++
+            }
+        }
+    }
 
     val icBackgroundColor by animateColorAsState(
         targetValue =
@@ -792,40 +820,41 @@ fun BottomSheetPlayer(
             ) {
                 when (playerBackground) {
                     PlayerBackgroundStyle.BLUR -> {
-                        AnimatedContent(
-                            targetState = mediaMetadata?.thumbnailUrl,
-                            transitionSpec = {
-                                fadeIn(tween(800)).togetherWith(fadeOut(tween(800)))
-                            },
-                            label = "blurBackground",
-                        ) { thumbnailUrl ->
-                            if (thumbnailUrl != null) {
-                                Box(modifier = Modifier.alpha(backgroundAlpha)) {
-                                    AsyncImage(
-                                        model =
-                                            ImageRequest
-                                                .Builder(context)
-                                                .data(thumbnailUrl)
-                                                .size(100, 100)
-                                                .allowHardware(false)
-                                                .build(),
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        modifier =
-                                            Modifier
-                                                .fillMaxSize()
-                                                .blur(if (useDarkTheme) 150.dp else 100.dp),
-                                    )
-                                    Box(
-                                        modifier =
-                                            Modifier
-                                                .fillMaxSize()
-                                                .background(Color.Black.copy(alpha = 0.3f)),
-                                    )
-                                }
-                            }
-                        }
-                    }
+    val meshGrid = remember(meshColors, gridVersion) {
+        List(36) { meshColors.random() }
+    }
+
+    Box(modifier = Modifier.fillMaxSize().alpha(backgroundAlpha)) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(100.dp)
+                .scale(1.4f)
+        ) {
+            val columns = 6
+            val rows = 6
+            val cellWidth = size.width / columns
+            val cellHeight = size.height / rows
+
+            meshGrid.forEachIndexed { index, targetColor ->
+                val col = index % columns
+                val row = index / columns
+
+                drawRect(
+                    color = targetColor,
+                    topLeft = Offset(col * cellWidth, row * cellHeight),
+                    size = Size(cellWidth * 1.8f, cellHeight * 1.8f)
+                )
+            }
+        }
+        
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.35f))
+        )
+    }
+}
 
                     PlayerBackgroundStyle.GRADIENT -> {
                         AnimatedContent(
