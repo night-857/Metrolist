@@ -442,7 +442,7 @@ fun BottomSheetPlayer(
         }
     } else {
         gradientColors = emptyList()
-        meshColors = listOf(Color.Black)
+        meshColors = listOf(Color.Black.toArgb())
     }
 }
 
