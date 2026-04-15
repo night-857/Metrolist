@@ -816,42 +816,47 @@ fun BottomSheetPlayer(
             ) {
                 when (playerBackground) {
                     PlayerBackgroundStyle.BLUR -> {
-    val meshGrid = remember(meshColors, gridVersion) {
-        List(36) { meshColors.random() }
-    }
-
-    Box(modifier = Modifier.fillMaxSize().alpha(backgroundAlpha)) {
-        Canvas(
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(100.dp)
-                .scale(1.4f)
-        ) {
-            val columns = 6
-            val rows = 6
-            val cellWidth = size.width / columns
-            val cellHeight = size.height / rows
-
-            meshGrid.forEachIndexed { index, targetColor ->
-                val col = index % columns
-                val row = index / columns
-
-                drawRect(
-                    color = targetColor,
-                    topLeft = Offset(col * cellWidth, row * cellHeight),
-                    size = Size(cellWidth * 1.8f, cellHeight * 1.8f)
-                )
-            }
+                        
+        val displayColors = remember(meshColors, gridVersion) {
+            meshColors.shuffled().take(6)
         }
-        
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.35f))
-        )
-    }
-}
 
+        val meshGrid = remember(displayColors) {
+            List(36) { displayColors.random() }
+        }
+
+        Box(modifier = Modifier.fillMaxSize().alpha(backgroundAlpha)) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(0.dp)
+                    .scale(1.4f)
+            ) {
+                val columns = 6
+                val rows = 6
+                val cellWidth = size.width / columns
+                val cellHeight = size.height / rows
+
+                meshGrid.forEachIndexed { index, targetColorInt ->
+                    val col = index % columns
+                    val row = index / columns
+
+                    drawRect(
+                        color = Color(targetColorInt),
+                        topLeft = Offset(col * cellWidth, row * cellHeight),
+                        size = Size(cellWidth * 1.8f, cellHeight * 1.8f)
+                    )
+                }
+            }
+            
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.35f))
+            )
+        }
+    }
+                    
                     PlayerBackgroundStyle.GRADIENT -> {
                         AnimatedContent(
                             targetState = gradientColors,
