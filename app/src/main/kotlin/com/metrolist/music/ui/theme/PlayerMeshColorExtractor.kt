@@ -1,7 +1,7 @@
 package com.metrolist.music.ui.theme
 
 import android.graphics.Bitmap
-import com.materialkolor.quantizer.QuantizerCelebi
+import com.materialkolor.quantize.QuantizerCelebi
 import com.materialkolor.score.Score
 
 object PlayerMeshColorExtractor {
