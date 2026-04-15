@@ -130,7 +130,7 @@ private fun calculateThumbnailDimensions(
         itemWidth = containerWidth,
         containerSize = containerWidth,
         thumbnailSize = effectiveSize,
-        cornerRadius = cornerRadius * 4
+        cornerRadius = cornerRadius * 7
     )
 }
 
