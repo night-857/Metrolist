@@ -816,60 +816,70 @@ fun BottomSheetPlayer(
             ) {
                 when (playerBackground) {
                     PlayerBackgroundStyle.BLUR -> {
-    val targetColors = remember(meshColors, gridVersion) {
-        meshColors.shuffled().take(6)
-    }
+        val targetColors = remember(meshColors) {
+            if (meshColors.isNotEmpty()) meshColors.take(6)
+            else listOf(Color.Black.toArgb())
+        }
 
-    val animatedColors = targetColors.map { targetColorInt ->
-        animateColorAsState(
-            targetValue = Color(targetColorInt),
-            animationSpec = tween(durationMillis = 5000),
-            label = "MeshCrossfade"
-        ).value
-    }
+        val animatedColors = targetColors.map { targetColorInt ->
+            animateColorAsState(
+                targetValue = Color(targetColorInt),
+                animationSpec = tween(durationMillis = 5000),
+                label = "MeshCrossfade"
+            ).value
+        }
 
-    val meshGridIndices = remember(meshColors.hashCode()) {
-        List(36) { (0..5).random() }
-    }
-
-    Box(modifier = Modifier.fillMaxSize().alpha(backgroundAlpha)) {
-        Canvas(
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(100.dp)
-                .scale(1.4f)
-        ) {
-            val columns = 6
-            val rows = 6
-            val cellWidth = size.width / columns
-            val cellHeight = size.height / rows
-
-            meshGridIndices.forEachIndexed { index, colorIndex ->
-                val col = index % columns
-                val row = index / columns
-
-                // Pegamos a cor animada baseada no índice do grid
-                val colorToDraw = if (animatedColors.isNotEmpty()) {
-                    animatedColors[colorIndex % animatedColors.size]
-                } else {
-                    Color.Black
-                }
-
-                drawRect(
-                    color = colorToDraw,
-                    topLeft = Offset(col * cellWidth, row * cellHeight),
-                    size = Size(cellWidth * 1.8f, cellHeight * 1.8f)
-                )
+        val weightedIndicesPool = remember {
+            buildList {
+                repeat(50) { add(0) }
+                repeat(20) { add(1) }
+                repeat(10) { add(2) }
+                repeat(10) { add(3) }
+                repeat(5)  { add(4) }
+                repeat(5)  { add(5) }
             }
         }
-        
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.35f))
-        )
+
+        val meshGridIndices = remember(meshColors.hashCode(), gridVersion) {
+            List(36) { weightedIndicesPool.random() }
+        }
+
+        Box(modifier = Modifier.fillMaxSize().alpha(backgroundAlpha)) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(100.dp)
+            ) {
+                val columns = 6
+                val rows = 6
+                val cellWidth = size.width / columns
+                val cellHeight = size.height / rows
+
+                meshGridIndices.forEachIndexed { index, colorIndex ->
+                    val col = index % columns
+                    val row = index / columns
+
+                    val colorToDraw = if (animatedColors.isNotEmpty()) {
+                        animatedColors[colorIndex % animatedColors.size]
+                    } else {
+                        Color.Black
+                    }
+
+                    drawRect(
+                        color = colorToDraw,
+                        topLeft = Offset(col * cellWidth, row * cellHeight),
+                        size = Size(cellWidth * 1.8f, cellHeight * 1.8f)
+                    )
+                }
+            }
+            
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.35f))
+            )
+        }
     }
-}
 
                     
                     PlayerBackgroundStyle.GRADIENT -> {
