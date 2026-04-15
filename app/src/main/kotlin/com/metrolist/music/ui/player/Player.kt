@@ -816,46 +816,61 @@ fun BottomSheetPlayer(
             ) {
                 when (playerBackground) {
                     PlayerBackgroundStyle.BLUR -> {
-                        
-        val displayColors = remember(meshColors, gridVersion) {
-            meshColors.shuffled().take(6)
-        }
-
-        val meshGrid = remember(displayColors) {
-            List(36) { displayColors.random() }
-        }
-
-        Box(modifier = Modifier.fillMaxSize().alpha(backgroundAlpha)) {
-            Canvas(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .blur(0.dp)
-                    .scale(1.4f)
-            ) {
-                val columns = 6
-                val rows = 6
-                val cellWidth = size.width / columns
-                val cellHeight = size.height / rows
-
-                meshGrid.forEachIndexed { index, targetColorInt ->
-                    val col = index % columns
-                    val row = index / columns
-
-                    drawRect(
-                        color = Color(targetColorInt),
-                        topLeft = Offset(col * cellWidth, row * cellHeight),
-                        size = Size(cellWidth * 1.8f, cellHeight * 1.8f)
-                    )
-                }
-            }
-            
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.35f))
-            )
-        }
+    val targetColors = remember(meshColors, gridVersion) {
+        meshColors.shuffled().take(6)
     }
+
+    val animatedColors = targetColors.map { targetColorInt ->
+        animateColorAsState(
+            targetValue = Color(targetColorInt),
+            animationSpec = tween(durationMillis = 5000),
+            label = "MeshCrossfade"
+        ).value
+    }
+
+    val meshGridIndices = remember(meshColors.hashCode()) {
+        List(36) { (0..5).random() }
+    }
+
+    Box(modifier = Modifier.fillMaxSize().alpha(backgroundAlpha)) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(0.dp)
+                .scale(1.4f)
+        ) {
+            val columns = 6
+            val rows = 6
+            val cellWidth = size.width / columns
+            val cellHeight = size.height / rows
+
+            meshGridIndices.forEachIndexed { index, colorIndex ->
+                val col = index % columns
+                val row = index / columns
+
+                // Pegamos a cor animada baseada no índice do grid
+                val colorToDraw = if (animatedColors.isNotEmpty()) {
+                    animatedColors[colorIndex % animatedColors.size]
+                } else {
+                    Color.Black
+                }
+
+                drawRect(
+                    color = colorToDraw,
+                    topLeft = Offset(col * cellWidth, row * cellHeight),
+                    size = Size(cellWidth * 1.8f, cellHeight * 1.8f)
+                )
+            }
+        }
+        
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.35f))
+        )
+    }
+}
+
                     
                     PlayerBackgroundStyle.GRADIENT -> {
                         AnimatedContent(
