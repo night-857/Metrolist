@@ -195,12 +195,9 @@ import androidx.datastore.preferences.core.edit
 import com.metrolist.music.constants.SleepTimerFadeOutKey
 import com.metrolist.music.constants.SleepTimerStopAfterCurrentSongKey
 import androidx.compose.foundation.Canvas
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.draw.scale
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.mutableIntStateOf
 import com.metrolist.music.ui.theme.PlayerMeshColorExtractor
 
