@@ -601,9 +601,8 @@ private fun NewMiniPlayerPlayButton(
     amplitude = { p -> 
         if (effectiveIsPlaying) WavyProgressIndicatorDefaults.indicatorAmplitude(p) else 0f 
     },
-    waveSpeed = { 
-        if (effectiveIsPlaying) WavyProgressIndicatorDefaults.CircularWavelength else 0.dp 
-    }
+    waveSpeed =
+        if (effectiveIsPlaying) WavyProgressIndicatorDefaults.CircularWavelength else 0.dp
 )
 
     }
