@@ -542,7 +542,8 @@ private fun NewMiniPlayerPlayButton(
             waveSpeed = if (effectiveIsPlaying) WavyProgressIndicatorDefaults.CircularWavelength else 0.dp,
             stroke = WavyProgressIndicatorDefaults.circularIndicatorStroke,
             trackStroke = WavyProgressIndicatorDefaults.circularTrackStroke
-        ) {
+        )
+    ) {
         // Thumbnail with play/pause overlay
         Box(
             contentAlignment = Alignment.Center,
