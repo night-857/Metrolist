@@ -596,11 +596,16 @@ private fun NewMiniPlayerPlayButton(
             }
         }
         CircularWavyProgressIndicator(
-            progress = { progressState.progress },
-            modifier = Modifier.fillMaxSize(),
-            amplitude = { if (effectiveIsPlaying) WavyProgressIndicatorDefaults.CircularAmplitude else 0f },
-            waveSpeed = { if (effectiveIsPlaying) WavyProgressIndicatorDefaults.CircularWavelength else 0.dp }
-        )
+    progress = { progressState.progress },
+    modifier = Modifier.fillMaxSize(),
+    amplitude = { p -> 
+        if (effectiveIsPlaying) WavyProgressIndicatorDefaults.indicatorAmplitude(p) else 0f 
+    },
+    waveSpeed = { 
+        if (effectiveIsPlaying) WavyProgressIndicatorDefaults.CircularWavelength else 0.dp 
+    }
+)
+
     }
 }
 
