@@ -597,57 +597,21 @@ fun VariantSelector() {
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun VariantPill(
     style: PaletteStyle,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-
-    val cornerRadius by animateDpAsState(
-        targetValue = when {
-            isPressed -> 8.dp
-            isSelected -> 12.dp
-            else -> 100.dp
-        },
-        label = "cornerRadius"
-    )
-
-    val containerColor by animateColorAsState(
-        targetValue = if (isSelected)
-            MaterialTheme.colorScheme.primary
-        else
-            MaterialTheme.colorScheme.surfaceContainerHigh,
-        label = "containerColor"
-    )
-
-    val contentColor by animateColorAsState(
-        targetValue = if (isSelected)
-            MaterialTheme.colorScheme.onPrimary
-        else
-            MaterialTheme.colorScheme.onSurfaceVariant,
-        label = "contentColor"
-    )
-
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(cornerRadius))
-            .background(containerColor)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = ripple(),
-                onClick = onClick
-            )
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-    ) {
-        Text(
-            text = style.name.replace("_", " "),
-            color = contentColor,
-            style = MaterialTheme.typography.labelLarge
+    ToggleButton(
+        checked = isSelected,
+        onCheckedChange = { onClick() },
+        shapes = ToggleButtonDefaults.shapes(),
+        colors = ToggleButtonDefaults.toggleButtonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
-    }
+    )
 }
 
 @Composable
