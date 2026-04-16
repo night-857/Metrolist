@@ -43,6 +43,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableLongState
 import androidx.compose.runtime.Stable
@@ -503,6 +505,8 @@ private fun NewMiniPlayer(
  * Play button with circular progress indicator
  * Uses drawWithContent to update progress without recomposition
  */
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun NewMiniPlayerPlayButton(
     progressState: ProgressState,
@@ -529,38 +533,16 @@ private fun NewMiniPlayerPlayButton(
         modifier =
             Modifier
                 .size(48.dp)
-                .drawWithContent {
-                    drawContent()
-                    // Draw progress arc - this reads progressState.progress during draw phase only
-                    val progress = progressState.progress
-                    val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
-                    val startAngle = -90f
-                    val sweepAngle = 360f * progress
-                    val diameter = size.minDimension
-                    val topLeft = Offset((size.width - diameter) / 2, (size.height - diameter) / 2)
-
-                    // Draw track
-                    drawArc(
-                        color = trackColor,
-                        startAngle = 0f,
-                        sweepAngle = 360f,
-                        useCenter = false,
-                        topLeft = topLeft,
-                        size = Size(diameter, diameter),
-                        style = stroke,
-                    )
-                    // Draw progress
-                    drawArc(
-                        color = primaryColor,
-                        startAngle = startAngle,
-                        sweepAngle = sweepAngle,
-                        useCenter = false,
-                        topLeft = topLeft,
-                        size = Size(diameter, diameter),
-                        style = stroke,
-                    )
-                },
-    ) {
+                CircularWavyProgressIndicator(
+            progress = { progressState.progress },
+            modifier = Modifier.fillMaxSize(),
+            color = primaryColor,
+            trackColor = trackColor,
+            amplitude = { if (effectiveIsPlaying) 1f else 0f },
+            waveSpeed = if (effectiveIsPlaying) WavyProgressIndicatorDefaults.CircularWavelength else 0.dp,
+            stroke = WavyProgressIndicatorDefaults.circularIndicatorStroke,
+            trackStroke = WavyProgressIndicatorDefaults.circularTrackStroke
+        ) {
         // Thumbnail with play/pause overlay
         Box(
             contentAlignment = Alignment.Center,
