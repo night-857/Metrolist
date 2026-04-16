@@ -133,7 +133,7 @@ fun AppNavigationRail(
     }
 }
 
-@OptIn(ExperimentalMaterial3ComponentOverrideApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigationBar(
     navigationItems: List<Screens>,
