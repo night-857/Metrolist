@@ -526,24 +526,20 @@ private fun NewMiniPlayerPlayButton(
     val isMuted by playerConnection.isMuted.collectAsStateWithLifecycle()
 
     val trackColor = outlineColor.copy(alpha = 0.2f)
-    val strokeWidth = 3.dp
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier =
-            Modifier
-                .size(48.dp)
-                CircularWavyProgressIndicator(
+        modifier = Modifier.size(48.dp)
+    ) {
+        CircularWavyProgressIndicator(
             progress = { progressState.progress },
             modifier = Modifier.fillMaxSize(),
-            color = primaryColor,
-            trackColor = trackColor,
             amplitude = { if (effectiveIsPlaying) 1f else 0f },
             waveSpeed = if (effectiveIsPlaying) WavyProgressIndicatorDefaults.CircularWavelength else 0.dp,
             stroke = WavyProgressIndicatorDefaults.circularIndicatorStroke,
             trackStroke = WavyProgressIndicatorDefaults.circularTrackStroke
         )
-    ) {
+
         // Thumbnail with play/pause overlay
         Box(
             contentAlignment = Alignment.Center,
