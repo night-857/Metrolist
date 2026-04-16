@@ -613,7 +613,9 @@ fun VariantPill(
         shapes = ToggleButtonDefaults.shapes(),
         colors = ToggleButtonDefaults.toggleButtonColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            checkedContainerColor = MaterialTheme.colorScheme.primary,
+            checkedContentColor = MaterialTheme.colorScheme.onPrimary
         )
     )
 }
