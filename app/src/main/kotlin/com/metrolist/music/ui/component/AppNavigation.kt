@@ -10,8 +10,8 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.ShortNavigationBar
+import androidx.compose.material3.ShortNavigationBarItem
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
@@ -133,6 +133,7 @@ fun AppNavigationRail(
     }
 }
 
+@OptIn(ExperimentalMaterial3ComponentOverrideApi::class)
 @Composable
 fun AppNavigationBar(
     navigationItems: List<Screens>,
@@ -148,7 +149,7 @@ fun AppNavigationBar(
     val haptics = LocalHapticFeedback.current
     val viewConfiguration = LocalViewConfiguration.current
 
-    NavigationBar(
+    ShortNavigationBar(
         modifier = modifier,
         containerColor = containerColor,
         contentColor = contentColor
@@ -191,7 +192,7 @@ fun AppNavigationBar(
                 }
             }
 
-            NavigationBarItem(
+            ShortNavigationBarItem(
                 selected = isSelected,
                 onClick = {
                     if (!isSearchItem) {
