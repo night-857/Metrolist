@@ -56,7 +56,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
@@ -1115,7 +1115,7 @@ fun HomeScreen(
         isRefreshing = isRefreshing,
         onRefresh = viewModel::refresh,
         indicator = {
-            Indicator(
+            PullToRefreshDefaults.LoadingIndicator(
                 isRefreshing = isRefreshing,
                 state = pullRefreshState,
                 modifier =
