@@ -612,12 +612,11 @@ fun VariantPill(
         onCheckedChange = { onClick() },
         shapes = ToggleButtonDefaults.shapes(),
         colors = ToggleButtonDefaults.toggleButtonColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            checkedContainerColor = MaterialTheme.colorScheme.primary,
-            checkedContentColor = MaterialTheme.colorScheme.onPrimary
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
-    )
+    ) {
+        Text(text = style.name)
+    }
 }
 
 @Composable
