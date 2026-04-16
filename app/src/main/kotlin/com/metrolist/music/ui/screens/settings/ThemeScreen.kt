@@ -612,7 +612,8 @@ fun VariantPill(
         onCheckedChange = { onClick() },
         shapes = ToggleButtonDefaults.shapes(),
         colors = ToggleButtonDefaults.toggleButtonColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     )
 }
