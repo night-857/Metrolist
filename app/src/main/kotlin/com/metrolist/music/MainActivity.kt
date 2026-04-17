@@ -537,6 +537,9 @@ class MainActivity : ComponentActivity() {
             mutableStateOf(selectedThemeColor)
         }
 
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+
         LaunchedEffect(selectedThemeColor) {
             if (!enableDynamicTheme) {
                 themeColor = selectedThemeColor
