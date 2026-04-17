@@ -54,6 +54,7 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -941,36 +942,77 @@ class MainActivity : ComponentActivity() {
     gesturesEnabled = true,
     drawerContent = {
         ModalDrawerSheet(
-            drawerContainerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surface,
+            drawerContainerColor = if (pureBlack) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceContainer,
         ) {
-            Spacer(Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)))
-            
             Text(
                 text = "Metrolist",
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
-                style = MaterialTheme.typography.titleLarge
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
 
             NavigationDrawerItem(
+                label = { Text(stringResource(R.string.home)) },
+                icon = { Icon(painterResource(if (currentRoute == Screens.Home.route) R.drawable.home_filled else R.drawable.home_outlined), null) },
+                selected = currentRoute == Screens.Home.route,
+                onClick = {
+                    scope.launch { drawerState.close() }
+                    if (currentRoute != Screens.Home.route) {
+                        navController.navigate(Screens.Home.route) {
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
+            )
+
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.search)) },
+                icon = { Icon(painterResource(R.drawable.search), contentDescription = null) },
+                selected = currentRoute?.startsWith("search") == true,
+                onClick = {
+                    scope.launch { drawerState.close() }
+                    if (currentRoute != "search_input") navController.navigate("search_input")
+                }
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 28.dp), thickness = 1.dp)
+
+            
+            NavigationDrawerItem(
                 label = { Text(stringResource(R.string.history)) },
-                icon = { Icon(painterResource(R.drawable.history), null) },
-                selected = false,
+                icon = { Icon(painterResource(R.drawable.history), contentDescription = null) },
+                selected = currentRoute == "history",
                 onClick = {
                     scope.launch { drawerState.close() }
                     navController.navigate("history")
-                },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                }
             )
 
             NavigationDrawerItem(
                 label = { Text(stringResource(R.string.stats)) },
-                icon = { Icon(painterResource(R.drawable.stats), null) },
-                selected = false,
+                icon = { Icon(painterResource(R.drawable.stats), contentDescription = null) },
+                selected = currentRoute == "stats",
                 onClick = {
                     scope.launch { drawerState.close() }
                     navController.navigate("stats")
-                },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                }
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 28.dp), thickness = 1.dp)
+
+            
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.filter_library)) },
+                icon = { Icon(painterResource(if (currentRoute == Screens.Library.route) R.drawable.library_music_filled else R.drawable.library_music_outlined), null) },
+                selected = currentRoute == Screens.Library.route,
+                onClick = {
+                    scope.launch { drawerState.close() }
+                    navController.navigate(Screens.Library.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         }
     }
