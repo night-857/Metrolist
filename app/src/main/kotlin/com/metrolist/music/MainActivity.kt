@@ -947,7 +947,7 @@ class MainActivity : ComponentActivity() {
             Text(
                 text = "Metrolist",
                 modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.titleLarge
             )
 
             NavigationDrawerItem(
