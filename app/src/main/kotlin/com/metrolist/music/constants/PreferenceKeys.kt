@@ -410,6 +410,7 @@ enum class PreferredLyricsProvider {
     KUGOU,
     BETTER_LYRICS,
     PAXSENIX,
+    LYRICSPLUS
 }
 
 enum class PlayerButtonsStyle {
