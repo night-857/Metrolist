@@ -58,6 +58,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -926,7 +932,46 @@ class MainActivity : ComponentActivity() {
                         ChangelogScreen(onDismiss = { showChangelog.value = false })
                     }
 
-                    Scaffold(
+                    ModalNavigationDrawer(
+    drawerState = drawerState,
+    gesturesEnabled = true,
+    drawerContent = {
+        ModalDrawerSheet(
+            drawerContainerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surface,
+        ) {
+            Spacer(Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)))
+            
+            Text(
+                text = "Metrolist",
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.history)) },
+                icon = { Icon(painterResource(R.drawable.history), null) },
+                selected = false,
+                onClick = {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("history")
+                },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+            )
+
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.stats)) },
+                icon = { Icon(painterResource(R.drawable.stats), null) },
+                selected = false,
+                onClick = {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("stats")
+                },
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+            )
+        }
+    }
+) {
+    Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                         topBar = {
                             AnimatedVisibility(
@@ -1292,6 +1337,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+                }
 
                     BottomSheetMenu(
                         state = LocalMenuState.current,
