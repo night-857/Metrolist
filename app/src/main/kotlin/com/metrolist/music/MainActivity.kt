@@ -50,11 +50,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -531,6 +534,9 @@ class MainActivity : ComponentActivity() {
             mutableStateOf(selectedThemeColor)
         }
 
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+
         LaunchedEffect(selectedThemeColor) {
             if (!enableDynamicTheme) {
                 themeColor = selectedThemeColor
@@ -645,6 +651,7 @@ class MainActivity : ComponentActivity() {
                             Screens.MainScreens
                         }
                     }
+                val drawerItems = Screens.DrawerScreens
                 val (slimNav) = rememberPreference(SlimNavBarKey, defaultValue = false)
                 val (useNewMiniPlayerDesign) = rememberPreference(UseNewMiniPlayerDesignKey, defaultValue = true)
                 val defaultOpenTab =
@@ -926,6 +933,72 @@ class MainActivity : ComponentActivity() {
                         ChangelogScreen(onDismiss = { showChangelog.value = false })
                     }
 
+                ModalNavigationDrawer(
+                    drawerState = drawerState
+                    drawerContent = {
+                            val currentBackStackEntry = navController.currentBackStackEntry // reads reactively outside remember
+
+                            val onDrawerItemClick: (Screens, Boolean) -> Unit =
+                                remember(navController, coroutineScope, topAppBarScrollBehavior, playerBottomSheetState, currentBackStackEntry) {
+                                    { screen: Screens, isSelected: Boolean ->
+                                        if (playerBottomSheetState.isExpanded) {
+                                            playerBottomSheetState.collapseSoft()
+                                        }
+                                        if (isSelected) {
+                                            val targetEntry = try {
+                                                val route = navController.currentBackStackEntry?.destination?.route
+                                                if (route == "search/{query}" || route == "search_input") {
+                                                    // For search screens, use search_input entry
+                                                    navController.getBackStackEntry("search_input")
+                                                } else {
+                                                    // For other screens, use current entry
+                                                    navController.currentBackStackEntry
+                                                }
+                                            } catch (e: Exception) {
+                                                null
+                                            }
+
+                                            // Use appropriate key based on screen type
+                                            if (screen == Screens.Search) {
+                                                val current = targetEntry?.savedStateHandle?.get<Int>("scrollToTopCount") ?: 0
+                                                targetEntry?.savedStateHandle?.set("scrollToTopCount", current + 1)
+                                            } else {
+                                                targetEntry?.savedStateHandle?.set("scrollToTop", true)
+                                            }
+
+                                            coroutineScope.launch {
+                                                topAppBarScrollBehavior.state.resetHeightOffset()
+                                            }
+                                        } else {
+                                            navController.navigate(screen.route) {
+                                                popUpTo(navController.graph.startDestinationId) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
+                                        }
+                                    }
+                                }
+
+                            val onDrawerSearchLongClick: () -> Unit =
+                                remember(navController) {
+                                    {
+                                        navController.navigate("recognition") {
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                }
+
+                            AppNavigationDrawer(
+                                drawerItems = drawerItems,
+                                currentRoute = currentRoute,
+                                onItemClick = onDrawerItemClick,
+                                pureBlack = pureBlack,
+                                onSearchLongClick = onDrawerSearchLongClick,
+                            )
+                        }
+                ) {
                     Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                         topBar = {
@@ -1292,6 +1365,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+                }
 
                     BottomSheetMenu(
                         state = LocalMenuState.current,
