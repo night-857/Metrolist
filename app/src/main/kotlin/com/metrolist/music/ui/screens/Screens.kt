@@ -46,6 +46,7 @@ sealed class Screens(
         iconIdInactive = R.drawable.group_outlined,
         iconIdActive = R.drawable.group_filled,
         route = "listen_together"
+        drawerSection = DrawerSection.PRIMARY
     )
 
     object Library : Screens(

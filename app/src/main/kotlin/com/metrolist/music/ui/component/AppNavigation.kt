@@ -153,10 +153,15 @@ fun AppNavigationDrawer(
     val viewConfiguration = LocalViewConfiguration.current
 
     ModalDrawerSheet(
-        modifier = modifier,
-        drawerContainerColor = drawerContainerColor
-    ) {
-        drawerItems.forEach { screen ->
+    modifier = modifier,
+    drawerContainerColor = drawerContainerColor
+) {
+    val groupedItems = remember(drawerItems) {
+        drawerItems.groupBy { it.drawerSection }
+    }
+
+    groupedItems.values.forEachIndexed { index, screens ->
+        screens.forEach { screen ->
             val isSelected = remember(currentRoute, screen.route) {
                 isRouteSelected(currentRoute, screen.route, drawerItems)
             }
@@ -168,7 +173,6 @@ fun AppNavigationDrawer(
             val isSearchItem = screen == Screens.Search && onSearchLongClick != null
             val interactionSource = remember { MutableInteractionSource() }
 
-            // Long press detection using InteractionSource
             if (isSearchItem) {
                 LaunchedEffect(interactionSource) {
                     var isLongClick = false
@@ -198,13 +202,10 @@ fun AppNavigationDrawer(
                 selected = isSelected,
                 onClick = {
                     if (!isSearchItem) {
-                        onItemClick(screen, currentIsSelected)
-                    }
-                    // For search item, click is handled via InteractionSource
+                        onItemClick(screen, currentIsSelected)}
                 },
 
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                    
                 interactionSource = interactionSource,
                 icon = {
                     Icon(
@@ -221,7 +222,19 @@ fun AppNavigationDrawer(
                 }
             )
         }
+
+        if (index < groupedItems.size - 1) {
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
+        }
     }
+}
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
