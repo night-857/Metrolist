@@ -935,7 +935,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                 ModalNavigationDrawer(
-                    drawerState = drawerState
+                    drawerState = drawerState,
                     drawerContent = {
                             val currentBackStackEntry = navController.currentBackStackEntry // reads reactively outside remember
 
