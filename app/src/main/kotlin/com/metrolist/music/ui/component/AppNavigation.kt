@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Icon
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
@@ -156,6 +157,20 @@ fun AppNavigationDrawer(
     modifier = modifier,
     drawerContainerColor = drawerContainerColor
 ) {
+    Text(
+        text = "Metrolist",
+        modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
+        style = MaterialTheme.typography.titleLarge
+    )
+
+    HorizontalDivider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        thickness = 1.dp,
+        color = MaterialTheme.colorScheme.outlineVariant
+    )
+
     val groupedItems = remember(drawerItems) {
         drawerItems.groupBy { it.drawerSection }
     }
@@ -202,9 +217,9 @@ fun AppNavigationDrawer(
                 selected = isSelected,
                 onClick = {
                     if (!isSearchItem) {
-                        onItemClick(screen, currentIsSelected)}
+                        onItemClick(screen, currentIsSelected)
+                    }
                 },
-
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                 interactionSource = interactionSource,
                 icon = {
@@ -234,7 +249,6 @@ fun AppNavigationDrawer(
         }
     }
 }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
