@@ -1039,10 +1039,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
             }
-                
-                }
-                
-            ) {Scaffold(
+        }
+    }
+) {Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                         topBar = {
                             AnimatedVisibility(
