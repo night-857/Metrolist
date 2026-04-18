@@ -10,6 +10,9 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.ShortNavigationBar
 import androidx.compose.material3.ShortNavigationBarItem
 import androidx.compose.material3.NavigationRail
@@ -132,6 +135,91 @@ fun AppNavigationRail(
         }
 
         Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+fun AppNavigationDrawer(
+    navigationItems: List<Screens>,
+    currentRoute: String?,
+    onItemClick: (Screens, Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    pureBlack: Boolean = false,
+    onSearchLongClick: (() -> Unit)? = null
+) {
+    val containerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer
+    val haptics = LocalHapticFeedback.current
+    val viewConfiguration = LocalViewConfiguration.current
+
+    ModalDrawerSheet(
+        modifier = modifier,
+        containerColor = containerColor
+    ) {
+        navigationItems.forEach { screen ->
+            val isSelected = remember(currentRoute, screen.route) {
+                isRouteSelected(currentRoute, screen.route, navigationItems)
+            }
+            val currentIsSelected by rememberUpdatedState(isSelected)
+            val iconRes = remember(isSelected, screen) {
+                if (isSelected) screen.iconIdActive else screen.iconIdInactive
+            }
+
+            val isSearchItem = screen == Screens.Search && onSearchLongClick != null
+            val interactionSource = remember { MutableInteractionSource() }
+
+            // Long press detection using InteractionSource
+            if (isSearchItem) {
+                LaunchedEffect(interactionSource) {
+                    var isLongClick = false
+                    interactionSource.interactions.collectLatest { interaction ->
+                        when (interaction) {
+                            is PressInteraction.Press -> {
+                                isLongClick = false
+                                delay(viewConfiguration.longPressTimeoutMillis)
+                                isLongClick = true
+                                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onSearchLongClick.invoke()
+                            }
+                            is PressInteraction.Release -> {
+                                if (!isLongClick) {
+                                    onItemClick(screen, currentIsSelected)
+                                }
+                            }
+                            is PressInteraction.Cancel -> {
+                                isLongClick = false
+                            }
+                        }
+                    }
+                }
+            }
+
+            NavigationDrawerItem(
+                selected = isSelected,
+                onClick = {
+                    if (!isSearchItem) {
+                        onItemClick(screen, currentIsSelected)
+                    }
+                    // For search item, click is handled via InteractionSource
+                },
+
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                    
+                interactionSource = interactionSource,
+                icon = {
+                    Icon(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = stringResource(screen.titleId)
+                    )
+                },
+                label = {
+                    Text(
+                        text = stringResource(screen.titleId),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            )
+        }
     }
 }
 
