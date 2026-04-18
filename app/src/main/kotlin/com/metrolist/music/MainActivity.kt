@@ -942,80 +942,112 @@ class MainActivity : ComponentActivity() {
     gesturesEnabled = true,
     drawerContent = {
         ModalDrawerSheet(
-            drawerContainerColor = if (pureBlack) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceContainer,
-        ) {
-            Text(
-                text = "Metrolist",
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
-                style = MaterialTheme.typography.titleLarge
-            )
+    drawerContainerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer,
+) {
+    Text(
+        text = "Metrolist",
+        modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
+        style = MaterialTheme.typography.titleLarge
+    )
 
-            NavigationDrawerItem(
-                label = { Text(stringResource(R.string.home)) },
-                icon = { Icon(painterResource(if (currentRoute == Screens.Home.route) R.drawable.home_filled else R.drawable.home_outlined), null) },
-                selected = currentRoute == Screens.Home.route,
-                onClick = {
-                    scope.launch { drawerState.close() }
-                    if (currentRoute != Screens.Home.route) {
-                        navController.navigate(Screens.Home.route) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                }
-            )
+    HorizontalDivider(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
+        thickness = 1.dp
+    )
 
-            NavigationDrawerItem(
-                label = { Text(stringResource(R.string.search)) },
-                icon = { Icon(painterResource(R.drawable.search), contentDescription = null) },
-                selected = currentRoute?.startsWith("search") == true,
-                onClick = {
-                    scope.launch { drawerState.close() }
-                    if (currentRoute != "search_input") navController.navigate("search_input")
-                }
-            )
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 28.dp), thickness = 1.dp)
+    NavigationDrawerItem(
+        label = { Text(stringResource(R.string.home)) },
+        icon = { 
+            Icon(
+                painter = painterResource(if (currentRoute == Screens.Home.route) R.drawable.home_filled else R.drawable.home_outlined), 
+                contentDescription = null
+            ) 
+        },
+        selected = currentRoute == Screens.Home.route,
+        onClick = {
+            scope.launch { drawerState.close() }
+            navController.navigate(Screens.Home.route) {
+                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
+        },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
 
-            
-            NavigationDrawerItem(
-                label = { Text(stringResource(R.string.history)) },
-                icon = { Icon(painterResource(R.drawable.history), contentDescription = null) },
-                selected = currentRoute == "history",
-                onClick = {
-                    scope.launch { drawerState.close() }
-                    navController.navigate("history")
-                }
-            )
+    NavigationDrawerItem(
+        label = { Text(stringResource(R.string.search)) },
+        icon = { Icon(painterResource(R.drawable.search), contentDescription = null) },
+        selected = currentRoute?.startsWith("search") == true,
+        onClick = {
+            scope.launch { drawerState.close() }
+            navController.navigate("search_input") {
+                launchSingleTop = true
+                restoreState = true
+            }
+        },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
 
-            NavigationDrawerItem(
-                label = { Text(stringResource(R.string.stats)) },
-                icon = { Icon(painterResource(R.drawable.stats), contentDescription = null) },
-                selected = currentRoute == "stats",
-                onClick = {
-                    scope.launch { drawerState.close() }
-                    navController.navigate("stats")
-                }
-            )
+    HorizontalDivider(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
+        thickness = 1.dp
+    )
+    
+    NavigationDrawerItem(
+        label = { Text(stringResource(R.string.history)) },
+        icon = { Icon(painterResource(R.drawable.history), contentDescription = null) },
+        selected = currentRoute == "history",
+        onClick = {
+            scope.launch { drawerState.close() }
+            navController.navigate("history") {
+                launchSingleTop = true
+                restoreState = true
+            }
+        },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 28.dp), thickness = 1.dp)
+    NavigationDrawerItem(
+        label = { Text(stringResource(R.string.stats)) },
+        icon = { Icon(painterResource(R.drawable.stats), contentDescription = null) },
+        selected = currentRoute == "stats",
+        onClick = {
+            scope.launch { drawerState.close() }
+            navController.navigate("stats") {
+                launchSingleTop = true
+                restoreState = true
+            }
+        },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
 
-            
-            NavigationDrawerItem(
-                label = { Text(stringResource(R.string.filter_library)) },
-                icon = { Icon(painterResource(if (currentRoute == Screens.Library.route) R.drawable.library_music_filled else R.drawable.library_music_outlined), null) },
-                selected = currentRoute == Screens.Library.route,
-                onClick = {
-                    scope.launch { drawerState.close() }
-                    navController.navigate(Screens.Library.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )
-        }
-    }
+    HorizontalDivider(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
+        thickness = 1.dp
+    )
+    
+    NavigationDrawerItem(
+        label = { Text(stringResource(R.string.filter_library)) },
+        icon = { 
+            Icon(
+                painter = painterResource(if (currentRoute == Screens.Library.route) R.drawable.library_music_filled else R.drawable.library_music_outlined), 
+                contentDescription = null
+            ) 
+        },
+        selected = currentRoute == Screens.Library.route,
+        onClick = {
+            scope.launch { drawerState.close() }
+            navController.navigate(Screens.Library.route) {
+                launchSingleTop = true
+                restoreState = true
+            }
+        },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
+}
+}
 ) {
     Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
