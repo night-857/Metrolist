@@ -43,7 +43,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
@@ -54,18 +53,11 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -539,9 +531,6 @@ class MainActivity : ComponentActivity() {
             mutableStateOf(selectedThemeColor)
         }
 
-        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-        val scope = rememberCoroutineScope()
-
         LaunchedEffect(selectedThemeColor) {
             if (!enableDynamicTheme) {
                 themeColor = selectedThemeColor
@@ -936,112 +925,8 @@ class MainActivity : ComponentActivity() {
                     if (showChangelog.value) {
                         ChangelogScreen(onDismiss = { showChangelog.value = false })
                     }
-                
-                ModalNavigationDrawer(
-                    drawerState = drawerState,
-                    gesturesEnabled = true,
-                    drawerContent = {
-        ModalDrawerSheet(
-            drawerContainerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer,
-        ) {
 
-            Text(
-                text = "Metrolist",
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                thickness = 1.dp
-            )
-
-            Screens.DrawerPrimaryScreens.forEach { screen ->
-
-                val isSelected =
-                    currentRoute == screen.route ||
-                    (screen == Screens.Search && currentRoute?.startsWith("search") == true)
-
-                NavigationDrawerItem(
-                    label = { Text(stringResource(screen.titleId)) },
-                    icon = {
-                        Icon(
-                            painter = painterResource(
-                                if (isSelected) screen.iconIdActive
-                                else screen.iconIdInactive
-                            ),
-                            contentDescription = null
-                        )
-                    },
-                    selected = isSelected,
-                    onClick = {
-                        onNavItemClick(screen, isSelected)
-                        scope.launch { drawerState.close() }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-            }
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                thickness = 1.dp
-            )
-
-            Screens.DrawerSecondaryScreens.forEach { screen ->
-
-                val isSelected = currentRoute == screen.route
-
-                NavigationDrawerItem(
-                    label = { Text(stringResource(screen.titleId)) },
-                    icon = {
-                        Icon(
-                            painter = painterResource(screen.iconIdInactive),
-                            contentDescription = null
-                        )
-                    },
-                    selected = isSelected,
-                    onClick = {
-                        onNavItemClick(screen, isSelected)
-                        scope.launch { drawerState.close() }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-            }
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                thickness = 1.dp
-            )
-
-            Screens.DrawerSettingsScreens.forEach { screen ->
-
-                val isSelected = currentRoute == screen.route
-
-                NavigationDrawerItem(
-                    label = { Text(stringResource(screen.titleId)) },
-                    icon = {
-                        Icon(
-                            painter = painterResource(screen.iconIdInactive),
-                            contentDescription = null
-                        )
-                    },
-                    selected = isSelected,
-                    onClick = {
-                        onNavItemClick(screen, isSelected)
-                        scope.launch { drawerState.close() }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-            }
-        }
-    }
-) {Scaffold(
+                    Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                         topBar = {
                             AnimatedVisibility(
@@ -1407,7 +1292,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                }
 
                     BottomSheetMenu(
                         state = LocalMenuState.current,
