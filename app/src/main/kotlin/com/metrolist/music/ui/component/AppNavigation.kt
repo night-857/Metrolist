@@ -154,11 +154,11 @@ fun AppNavigationDrawer(
 
     ModalDrawerSheet(
         modifier = modifier,
-        drawerContainerColor = containerColor
+        drawerContainerColor = drawerContainerColor
     ) {
         drawerItems.forEach { screen ->
             val isSelected = remember(currentRoute, screen.route) {
-                isRouteSelected(currentRoute, screen.route, navigationItems)
+                isRouteSelected(currentRoute, screen.route, drawerItems)
             }
             val currentIsSelected by rememberUpdatedState(isSelected)
             val iconRes = remember(isSelected, screen) {
