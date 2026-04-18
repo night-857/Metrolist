@@ -936,120 +936,113 @@ class MainActivity : ComponentActivity() {
                     if (showChangelog.value) {
                         ChangelogScreen(onDismiss = { showChangelog.value = false })
                     }
-
-                    ModalNavigationDrawer(
-    drawerState = drawerState,
-    gesturesEnabled = true,
-    drawerContent = {
+                
+                ModalNavigationDrawer(
+                    drawerState = drawerState,
+                    gesturesEnabled = true,
+                    drawerContent = {
         ModalDrawerSheet(
-    drawerContainerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer,
-) {
-    Text(
-        text = "Metrolist",
-        modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
-        style = MaterialTheme.typography.titleLarge
-    )
+            drawerContainerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer,
+        ) {
 
-    HorizontalDivider(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
-        thickness = 1.dp
-    )
+            Text(
+                text = "Metrolist",
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
+                style = MaterialTheme.typography.titleLarge
+            )
 
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                thickness = 1.dp
+            )
 
-    NavigationDrawerItem(
-        label = { Text(stringResource(R.string.home)) },
-        icon = { 
-            Icon(
-                painter = painterResource(if (currentRoute == Screens.Home.route) R.drawable.home_filled else R.drawable.home_outlined), 
-                contentDescription = null
-            ) 
-        },
-        selected = currentRoute == Screens.Home.route,
-        onClick = {
-            scope.launch { drawerState.close() }
-            navController.navigate(Screens.Home.route) {
-                popUpTo(navController.graph.startDestinationId) { saveState = true }
-                launchSingleTop = true
-                restoreState = true
+            Screens.DrawerPrimaryScreens.forEach { screen ->
+
+                val isSelected =
+                    currentRoute == screen.route ||
+                    (screen == Screens.Search && currentRoute?.startsWith("search") == true)
+
+                NavigationDrawerItem(
+                    label = { Text(stringResource(screen.titleId)) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(
+                                if (isSelected) screen.iconIdActive
+                                else screen.iconIdInactive
+                            ),
+                            contentDescription = null
+                        )
+                    },
+                    selected = isSelected,
+                    onClick = {
+                        onNavItemClick(screen, isSelected)
+                        scope.launch { drawerState.close() }
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
             }
-        },
-        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-    )
 
-    NavigationDrawerItem(
-        label = { Text(stringResource(R.string.search)) },
-        icon = { Icon(painterResource(R.drawable.search), contentDescription = null) },
-        selected = currentRoute?.startsWith("search") == true,
-        onClick = {
-            scope.launch { drawerState.close() }
-            navController.navigate("search_input") {
-                launchSingleTop = true
-                restoreState = true
-            }
-        },
-        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-    )
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                thickness = 1.dp
+            )
 
-    HorizontalDivider(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
-        thickness = 1.dp
-    )
-    
-    NavigationDrawerItem(
-        label = { Text(stringResource(R.string.history)) },
-        icon = { Icon(painterResource(R.drawable.history), contentDescription = null) },
-        selected = currentRoute == "history",
-        onClick = {
-            scope.launch { drawerState.close() }
-            navController.navigate("history") {
-                launchSingleTop = true
-                restoreState = true
-            }
-        },
-        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-    )
+            Screens.DrawerSecondaryScreens.forEach { screen ->
 
-    NavigationDrawerItem(
-        label = { Text(stringResource(R.string.stats)) },
-        icon = { Icon(painterResource(R.drawable.stats), contentDescription = null) },
-        selected = currentRoute == "stats",
-        onClick = {
-            scope.launch { drawerState.close() }
-            navController.navigate("stats") {
-                launchSingleTop = true
-                restoreState = true
-            }
-        },
-        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-    )
+                val isSelected = currentRoute == screen.route
 
-    HorizontalDivider(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), 
-        thickness = 1.dp
-    )
-    
-    NavigationDrawerItem(
-        label = { Text(stringResource(R.string.filter_library)) },
-        icon = { 
-            Icon(
-                painter = painterResource(if (currentRoute == Screens.Library.route) R.drawable.library_music_filled else R.drawable.library_music_outlined), 
-                contentDescription = null
-            ) 
-        },
-        selected = currentRoute == Screens.Library.route,
-        onClick = {
-            scope.launch { drawerState.close() }
-            navController.navigate(Screens.Library.route) {
-                launchSingleTop = true
-                restoreState = true
+                NavigationDrawerItem(
+                    label = { Text(stringResource(screen.titleId)) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(screen.iconIdInactive),
+                            contentDescription = null
+                        )
+                    },
+                    selected = isSelected,
+                    onClick = {
+                        onNavItemClick(screen, isSelected)
+                        scope.launch { drawerState.close() }
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
             }
-        },
-        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-    )
-}
-}
-) {
-    Scaffold(
+
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                thickness = 1.dp
+            )
+
+            Screens.DrawerSettingsScreens.forEach { screen ->
+
+                val isSelected = currentRoute == screen.route
+
+                NavigationDrawerItem(
+                    label = { Text(stringResource(screen.titleId)) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(screen.iconIdInactive),
+                            contentDescription = null
+                        )
+                    },
+                    selected = isSelected,
+                    onClick = {
+                        onNavItemClick(screen, isSelected)
+                        scope.launch { drawerState.close() }
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+            }
+                
+                }
+                
+            ) {Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                         topBar = {
                             AnimatedVisibility(

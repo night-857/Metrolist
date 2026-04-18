@@ -45,7 +45,39 @@ sealed class Screens(
         route = "library"
     )
 
+    object History : Screens(
+        titleId = R.string.history,
+        iconIdInactive = R.drawable.history,
+        iconIdActive = R.drawable.history,
+        route = "history"
+    )
+
+    object Stats : Screens(
+        titleId = R.string.stats,
+        iconIdInactive = R.drawable.stats,
+        iconIdActive = R.drawable.stats,
+        route = "stats"
+    )
+
+    object Settings : Screens(
+        titleId = R.string.settings,
+        iconIdInactive = R.drawable.settings,
+        iconIdActive = R.drawable.settings,
+        route = "settings"
+    )
+
+    object About : Screens(
+        titleId = R.string.about,
+        iconIdInactive = R.drawable.info,
+        iconIdActive = R.drawable.info,
+        route = "settings/about"
+    )
+
     companion object {
         val MainScreens = listOf(Home, Search, ListenTogether, Library)
+
+        val DrawerPrimaryScreens = listOf(Home, Search, Library)
+        val DrawerSecondaryScreens = listOf(History, Stats)
+        val DrawerSettingsScreens = listOf(Settings, About)
     }
 }
