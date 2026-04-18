@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +31,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -42,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.metrolist.music.ui.screens.Screens
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Immutable
 private data class NavItemState(
@@ -145,6 +148,7 @@ fun AppNavigationRail(
 @Composable
 fun AppNavigationDrawer(
     drawerItems: List<Screens>,
+    drawerState: DrawerState,
     currentRoute: String?,
     onItemClick: (Screens, Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -154,21 +158,22 @@ fun AppNavigationDrawer(
     val drawerContainerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer
     val haptics = LocalHapticFeedback.current
     val viewConfiguration = LocalViewConfiguration.current
+    val scope = rememberCoroutineScope()
 
     ModalDrawerSheet(
-    modifier = modifier,
+    modifier = modifier.width(300dp),
     drawerContainerColor = drawerContainerColor
 ) {
     Text(
-        text = "Metrolist",
-        modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp),
-        style = MaterialTheme.typography.titleLarge
+    text = "Metrolist",
+    modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
+    style = MaterialTheme.typography.titleLarge
     )
 
     HorizontalDivider(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 8.dp),
         thickness = 1.dp,
         color = MaterialTheme.colorScheme.outlineVariant
     )
@@ -205,8 +210,12 @@ fun AppNavigationDrawer(
                             is PressInteraction.Release -> {
                                 if (!isLongClick) {
                                     onItemClick(screen, currentIsSelected)
+                                    scope.launch {
+                                        drawerState.close()
+                                    }
                                 }
                             }
+
                             is PressInteraction.Cancel -> {
                                 isLongClick = false
                             }
@@ -220,9 +229,12 @@ fun AppNavigationDrawer(
                 onClick = {
                     if (!isSearchItem) {
                         onItemClick(screen, currentIsSelected)
+                        scope.launch {
+                            drawerState.close() 
+                        }
                     }
                 },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding) .height(48.dp),
                 interactionSource = interactionSource,
                 icon = {
                     Icon(
@@ -244,7 +256,7 @@ fun AppNavigationDrawer(
             HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp),
+                    .padding(vertical = 8.dp),
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.outlineVariant
             )
