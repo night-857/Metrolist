@@ -141,14 +141,14 @@ fun AppNavigationRail(
 
 @Composable
 fun AppNavigationDrawer(
-    navigationItems: List<Screens>,
+    drawerItems: List<Screens>,
     currentRoute: String?,
     onItemClick: (Screens, Boolean) -> Unit,
     modifier: Modifier = Modifier,
     pureBlack: Boolean = false,
     onSearchLongClick: (() -> Unit)? = null
 ) {
-    val containerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer
+    val drawerContainerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer
     val haptics = LocalHapticFeedback.current
     val viewConfiguration = LocalViewConfiguration.current
 
@@ -156,7 +156,7 @@ fun AppNavigationDrawer(
         modifier = modifier,
         drawerContainerColor = containerColor
     ) {
-        navigationItems.forEach { screen ->
+        drawerItems.forEach { screen ->
             val isSelected = remember(currentRoute, screen.route) {
                 isRouteSelected(currentRoute, screen.route, navigationItems)
             }

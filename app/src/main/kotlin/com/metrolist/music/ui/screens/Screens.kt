@@ -16,19 +16,29 @@ sealed class Screens(
     @DrawableRes val iconIdInactive: Int,
     @DrawableRes val iconIdActive: Int,
     val route: String,
+    val drawerSection: DrawerSection? = null
 ) {
+
+    enum class DrawerSection {
+        PRIMARY,
+        SECONDARY,
+        SETTINGS
+    }
+
     object Home : Screens(
         titleId = R.string.home,
         iconIdInactive = R.drawable.home_outlined,
         iconIdActive = R.drawable.home_filled,
-        route = "home"
+        route = "home",
+        drawerSection = DrawerSection.PRIMARY
     )
 
     object Search : Screens(
         titleId = R.string.search,
         iconIdInactive = R.drawable.search,
         iconIdActive = R.drawable.search,
-        route = "search_input"
+        route = "search_input",
+        drawerSection = DrawerSection.PRIMARY
     )
 
     object ListenTogether : Screens(
@@ -42,42 +52,44 @@ sealed class Screens(
         titleId = R.string.filter_library,
         iconIdInactive = R.drawable.library_music_outlined,
         iconIdActive = R.drawable.library_music_filled,
-        route = "library"
+        route = "library",
+        drawerSection = DrawerSection.PRIMARY
     )
 
     object History : Screens(
         titleId = R.string.history,
         iconIdInactive = R.drawable.history,
         iconIdActive = R.drawable.history,
-        route = "history"
+        route = "history",
+        drawerSection = DrawerSection.SECONDARY
     )
 
     object Stats : Screens(
         titleId = R.string.stats,
         iconIdInactive = R.drawable.stats,
         iconIdActive = R.drawable.stats,
-        route = "stats"
+        route = "stats",
+        drawerSection = DrawerSection.SECONDARY
     )
 
     object Settings : Screens(
         titleId = R.string.settings,
         iconIdInactive = R.drawable.settings,
         iconIdActive = R.drawable.settings,
-        route = "settings"
+        route = "settings",
+        drawerSection = DrawerSection.SETTINGS
     )
 
     object About : Screens(
         titleId = R.string.about,
         iconIdInactive = R.drawable.info,
         iconIdActive = R.drawable.info,
-        route = "settings/about"
+        route = "settings/about",
+        drawerSection = DrawerSection.SETTINGS
     )
 
     companion object {
         val MainScreens = listOf(Home, Search, ListenTogether, Library)
-
-        val DrawerPrimaryScreens = listOf(Home, Search, Library)
-        val DrawerSecondaryScreens = listOf(History, Stats)
-        val DrawerSettingsScreens = listOf(Settings, About)
+        val DrawerScreens = listOf(Home, Search, Library, History, Stats, Settings, About)
     }
 }
