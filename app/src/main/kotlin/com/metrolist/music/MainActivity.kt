@@ -993,7 +993,7 @@ class MainActivity : ComponentActivity() {
 
                             AppNavigationDrawer(
                                 drawerItems = drawerItems,
-                                drawerState = DrawerState,
+                                drawerState = drawerState,
                                 currentRoute = currentRoute,
                                 onItemClick = onDrawerItemClick,
                                 pureBlack = pureBlack,
