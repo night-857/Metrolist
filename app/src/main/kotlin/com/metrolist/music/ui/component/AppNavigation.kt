@@ -164,7 +164,7 @@ fun AppNavigationDrawer(
 
     ModalDrawerSheet(
     modifier = modifier
-        .width(300dp),
+        .width(300.dp),
     drawerContainerColor = drawerContainerColor
 ) {
     Text(
