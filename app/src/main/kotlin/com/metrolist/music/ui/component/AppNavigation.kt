@@ -175,7 +175,7 @@ fun AppNavigationDrawer(
 ) {
     Text(
     text = "Metrolist",
-    modifier = Modifier.padding(horizontal = 28.dp, vertical = 12.dp),
+    modifier = Modifier.padding(horizontal = 28.dp, vertical = 14.dp),
     style = MaterialTheme.typography.titleLarge
     )
 
