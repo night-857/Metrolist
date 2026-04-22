@@ -10,7 +10,9 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
@@ -161,10 +163,12 @@ fun AppNavigationDrawer(
     val haptics = LocalHapticFeedback.current
     val viewConfiguration = LocalViewConfiguration.current
     val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
     ModalDrawerSheet(
     modifier = modifier
-        .width(320.dp),
+        .width(320.dp)
+        .verticalScroll(scrollState),
     drawerContainerColor = drawerContainerColor
 ) {
     Text(
