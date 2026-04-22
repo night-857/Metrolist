@@ -7,6 +7,7 @@ package com.metrolist.music.ui.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -168,7 +169,8 @@ fun AppNavigationDrawer(
     ModalDrawerSheet(
     modifier = modifier
         .width(320.dp)
-        .verticalScroll(scrollState),
+        .verticalScroll(scrollState)
+        .fillMaxHeight(),
     drawerContainerColor = drawerContainerColor
 ) {
     Text(
