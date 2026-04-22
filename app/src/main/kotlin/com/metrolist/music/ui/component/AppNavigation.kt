@@ -157,19 +157,19 @@ fun AppNavigationDrawer(
     pureBlack: Boolean = false,
     onSearchLongClick: (() -> Unit)? = null
 ) {
-    val drawerContainerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer
+    val drawerContainerColor = if (pureBlack) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceContainer
     val haptics = LocalHapticFeedback.current
     val viewConfiguration = LocalViewConfiguration.current
     val scope = rememberCoroutineScope()
 
     ModalDrawerSheet(
     modifier = modifier
-        .width(300.dp),
+        .width(320.dp),
     drawerContainerColor = drawerContainerColor
 ) {
     Text(
     text = "Metrolist",
-    modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
+    modifier = Modifier.padding(horizontal = 28.dp, vertical = 12.dp),
     style = MaterialTheme.typography.titleLarge
     )
 
