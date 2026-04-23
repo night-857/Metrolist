@@ -7,6 +7,7 @@ package com.metrolist.music.ui.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -167,101 +168,18 @@ fun AppNavigationDrawer(
     val scrollState = rememberScrollState()
 
     ModalDrawerSheet(
-    modifier = modifier
-        .width(320.dp)
-        .verticalScroll(scrollState)
-        .fillMaxHeight(),
-    drawerContainerColor = drawerContainerColor
-) {
-    Text(
-    text = "Metrolist",
-    modifier = Modifier.padding(horizontal = 28.dp, vertical = 14.dp),
-    style = MaterialTheme.typography.titleLarge
-    )
-
-    HorizontalDivider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        thickness = 1.dp,
-        color = MaterialTheme.colorScheme.outlineVariant
-    )
-
-    val groupedItems = remember(drawerItems) {
-        drawerItems.groupBy { it.drawerSection }
-    }
-
-    groupedItems.values.forEachIndexed { index, screens ->
-        screens.forEach { screen ->
-            val isSelected = remember(currentRoute, screen.route) {
-                isRouteSelected(currentRoute, screen.route, drawerItems)
-            }
-            val currentIsSelected by rememberUpdatedState(isSelected)
-            val iconRes = remember(isSelected, screen) {
-                if (isSelected) screen.iconIdActive else screen.iconIdInactive
-            }
-
-            val isSearchItem = screen == Screens.Search && onSearchLongClick != null
-            val interactionSource = remember { MutableInteractionSource() }
-
-            if (isSearchItem) {
-                LaunchedEffect(interactionSource) {
-                    var isLongClick = false
-                    interactionSource.interactions.collectLatest { interaction ->
-                        when (interaction) {
-                            is PressInteraction.Press -> {
-                                isLongClick = false
-                                delay(viewConfiguration.longPressTimeoutMillis)
-                                isLongClick = true
-                                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onSearchLongClick.invoke()
-                            }
-                            is PressInteraction.Release -> {
-                                if (!isLongClick) {
-                                    onItemClick(screen, currentIsSelected)
-                                    scope.launch {
-                                        drawerState.close()
-                                    }
-                                }
-                            }
-
-                            is PressInteraction.Cancel -> {
-                                isLongClick = false
-                            }
-                        }
-                    }
-                }
-            }
-
-            NavigationDrawerItem(
-                selected = isSelected,
-                onClick = {
-                    if (!isSearchItem) {
-                        onItemClick(screen, currentIsSelected)
-                        scope.launch {
-                            drawerState.close() 
-                        }
-                    }
-                },
-                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding) .height(48.dp),
-                interactionSource = interactionSource,
-                icon = {
-                    Icon(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = stringResource(screen.titleId)
-                    )
-                },
-                label = {
-                    Text(
-                        text = stringResource(screen.titleId),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
+        modifier = modifier.width(320.dp),
+        drawerContainerColor = drawerContainerColor
+    ) {
+        Column(
+            modifier = Modifier.verticalScroll(scrollState)
+        ) {
+            Text(
+                text = "Metrolist",
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 14.dp),
+                style = MaterialTheme.typography.titleLarge
             )
-        }
 
-        if (index < groupedItems.size - 1) {
             HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -269,9 +187,94 @@ fun AppNavigationDrawer(
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.outlineVariant
             )
+
+            val groupedItems = remember(drawerItems) {
+                drawerItems.groupBy { it.drawerSection }
+            }
+
+            groupedItems.values.forEachIndexed { index, screens ->
+                screens.forEach { screen ->
+                    val isSelected = remember(currentRoute, screen.route) {
+                        isRouteSelected(currentRoute, screen.route, drawerItems)
+                    }
+                    val currentIsSelected by rememberUpdatedState(isSelected)
+                    val iconRes = remember(isSelected, screen) {
+                        if (isSelected) screen.iconIdActive else screen.iconIdInactive
+                    }
+
+                    val isSearchItem = screen == Screens.Search && onSearchLongClick != null
+                    val interactionSource = remember { MutableInteractionSource() }
+
+                    if (isSearchItem) {
+                        LaunchedEffect(interactionSource) {
+                            var isLongClick = false
+                            interactionSource.interactions.collectLatest { interaction ->
+                                when (interaction) {
+                                    is PressInteraction.Press -> {
+                                        isLongClick = false
+                                        delay(viewConfiguration.longPressTimeoutMillis)
+                                        isLongClick = true
+                                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        onSearchLongClick.invoke()
+                                    }
+                                    is PressInteraction.Release -> {
+                                        if (!isLongClick) {
+                                            onItemClick(screen, currentIsSelected)
+                                            scope.launch {
+                                                drawerState.close()
+                                            }
+                                        }
+                                    }
+                                    is PressInteraction.Cancel -> {
+                                        isLongClick = false
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    NavigationDrawerItem(
+                        selected = isSelected,
+                        onClick = {
+                            if (!isSearchItem) {
+                                onItemClick(screen, currentIsSelected)
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                            }
+                        },
+                        modifier = Modifier
+                            .padding(NavigationDrawerItemDefaults.ItemPadding)
+                            .height(48.dp),
+                        interactionSource = interactionSource,
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = stringResource(screen.titleId)
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = stringResource(screen.titleId),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    )
+                }
+
+                if (index < groupedItems.size - 1) {
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        thickness = 1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+                }
+            }
         }
     }
-}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
