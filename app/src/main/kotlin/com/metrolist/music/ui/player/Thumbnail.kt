@@ -87,6 +87,7 @@ import com.metrolist.music.constants.SwipeThumbnailKey
 import com.metrolist.music.constants.ThumbnailCornerRadius
 import com.metrolist.music.listentogether.RoomRole
 import com.metrolist.music.ui.component.CastButton
+import com.metrolist.music.ui.utils.resize
 import com.metrolist.music.utils.rememberEnumPreference
 import com.metrolist.music.utils.rememberPreference
 import kotlinx.coroutines.delay
@@ -568,22 +569,23 @@ private fun ThumbnailItem(
             if (isLandscape) {
                 Modifier.size(dimensions.thumbnailSize)
             } else {
-                Modifier.fillMaxSize()
+                Modifier
+                    .fillMaxSize()
+                    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+                    .drawWithContent {
+                        drawContent()
+                        drawRect(
+                            brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                                0f to Color.Transparent,
+                                0.25f to Color.Black,
+                                0.75f to Color.Black,
+                                1f to Color.Transparent
+                            ),
+                            blendMode = androidx.compose.ui.graphics.BlendMode.DstIn
+                        )
+                    }
             }
         )
-        .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-                .drawWithContent {
-                    drawContent()
-                    drawRect(
-                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
-                            0f to Color.Transparent,
-                            0.20f to Color.Black,
-                            0.80f to Color.Black,
-                            1f to Color.Transparent
-                        ),
-                        blendMode = androidx.compose.ui.graphics.BlendMode.DstIn
-                    )
-                }
         .clip(RoundedCornerShape(dimensions.cornerRadius))
         )
         
@@ -596,9 +598,11 @@ private fun ThumbnailItem(
                 } else {
                     item.mediaMetadata.artworkUri?.toString()
                 }
+                
+                val highResArtworkUri = artworkUriToUse?.resize(1080, 1080)
 
                 ThumbnailImage(
-                    artworkUri = artworkUriToUse,
+                    artworkUri = highResArtworkUri,
                     cropArtwork = cropAlbumArt
                 )
             }
