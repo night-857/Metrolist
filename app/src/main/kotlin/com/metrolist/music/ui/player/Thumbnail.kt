@@ -659,7 +659,7 @@ private fun ThumbnailImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(artworkUri)
                 .size(coil3.size.Size.ORIGINAL)
-                .precision(coil3.request.Precision.EXACT)
+                .precision(coil3.size.Precision.EXACT)
                 .memoryCachePolicy(CachePolicy.ENABLED)
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .networkCachePolicy(CachePolicy.ENABLED)
