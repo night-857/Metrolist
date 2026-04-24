@@ -327,87 +327,83 @@ fun Thumbnail(
                 .fillMaxSize()
                 .then(if (!isLandscape) Modifier.statusBarsPadding() else Modifier),
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = if (isLandscape) Arrangement.Center else Arrangement.Top
-            ) {
-                // Thumbnail content
-                BoxWithConstraints(
-                    contentAlignment = Alignment.Center,
-                    modifier = if (isLandscape) {
-                        Modifier.weight(1f, false)
-                    } else {
-                        Modifier.fillMaxSize()
-                    }
-                ) {
-                    // Calculate dimensions once per size change, considering landscape mode
-                    val dimensions = remember(maxWidth, maxHeight, isLandscape) {
-                        calculateThumbnailDimensions(
-                            containerWidth = maxWidth,
-                            containerHeight = maxHeight,
-                            isLandscape = isLandscape
-                        )
-                    }
+Box(
+    modifier = Modifier.fillMaxSize()
+) {
+    BoxWithConstraints(
+        contentAlignment = Alignment.Center,
+        modifier = if (isLandscape) {
+            Modifier.align(Alignment.Center) 
+        } else {
+            Modifier.fillMaxSize()
+        }
+    ) {
+        val dimensions = remember(maxWidth, maxHeight, isLandscape) {
+            calculateThumbnailDimensions(
+                containerWidth = maxWidth,
+                containerHeight = maxHeight,
+                isLandscape = isLandscape
+            )
+        }
 
-                    // Remember the onSeek callback to prevent recomposition
-                    val onSeekCallback = remember {
-                        { direction: String, showEffect: Boolean ->
-                            seekDirection = direction
-                            showSeekEffect = showEffect
-                        }
-                    }
-                    
-                    // Derive scroll enabled state to prevent unnecessary recomposition
-                    val isScrollEnabled by remember(swipeThumbnail) {
-                        derivedStateOf { swipeThumbnail && isPlayerExpanded() }
-                    }
-                    
-                    LazyHorizontalGrid(
-                        state = thumbnailLazyGridState,
-                        rows = GridCells.Fixed(1),
-                        flingBehavior = rememberSnapFlingBehavior(thumbnailSnapLayoutInfoProvider),
-                        userScrollEnabled = isScrollEnabled,
-                        modifier = if (isLandscape) {
-                            Modifier.size(dimensions.thumbnailSize + (PlayerHorizontalPadding * 2))
-                        } else {
-                            Modifier.fillMaxSize()
-                        }
-                    ) {
-                        items(
-                            items = mediaItems,
-                            key = { item -> 
-                                item.mediaId.ifEmpty { "unknown_${item.hashCode()}" }
-                            }
-                        ) { item ->
-                            ThumbnailItem(
-                                item = item,
-                                dimensions = dimensions,
-                                hidePlayerThumbnail = hidePlayerThumbnail,
-                                cropAlbumArt = cropAlbumArt,
-                                textBackgroundColor = textBackgroundColor,
-                                layoutDirection = layoutDirection,
-                                onSeek = onSeekCallback,
-                                playerConnection = playerConnection,
-                                context = context,
-                                isLandscape = isLandscape,
-                                isListenTogetherGuest = isListenTogetherGuest,
-                                currentMediaId = mediaMetadata?.id,
-                                currentMediaThumbnail = mediaMetadata?.thumbnailUrl
-                            )
-                        }
-                    }
-                }
-                
-                // Now Playing header - hide in landscape mode
-                if (!isLandscape) {
-                    ThumbnailHeader(
-                        queueTitle = queueTitle,
-                        albumTitle = mediaMetadata?.album?.title,
-                        textColor = textBackgroundColor
-                    )
-                }
+        val onSeekCallback = remember {
+            { direction: String, showEffect: Boolean ->
+                seekDirection = direction
+                showSeekEffect = showEffect
             }
+        }
+        
+        val isScrollEnabled by remember(swipeThumbnail) {
+            derivedStateOf { swipeThumbnail && isPlayerExpanded() }
+        }
+        
+        LazyHorizontalGrid(
+            state = thumbnailLazyGridState,
+            rows = GridCells.Fixed(1),
+            flingBehavior = rememberSnapFlingBehavior(thumbnailSnapLayoutInfoProvider),
+            userScrollEnabled = isScrollEnabled,
+            modifier = if (isLandscape) {
+                Modifier.size(dimensions.thumbnailSize + (PlayerHorizontalPadding * 2))
+            } else {
+                Modifier.fillMaxSize()
+            }
+        ) {
+            items(
+                items = mediaItems,
+                key = { item -> 
+                    item.mediaId.ifEmpty { "unknown_${item.hashCode()}" }
+                }
+            ) { item ->
+                ThumbnailItem(
+                    item = item,
+                    dimensions = dimensions,
+                    hidePlayerThumbnail = hidePlayerThumbnail,
+                    cropAlbumArt = cropAlbumArt,
+                    textBackgroundColor = textBackgroundColor,
+                    layoutDirection = layoutDirection,
+                    onSeek = onSeekCallback,
+                    playerConnection = playerConnection,
+                    context = context,
+                    isLandscape = isLandscape,
+                    isListenTogetherGuest = isListenTogetherGuest,
+                    currentMediaId = mediaMetadata?.id,
+                    currentMediaThumbnail = mediaMetadata?.thumbnailUrl
+                )
+            }
+        }
+    }
+    
+    if (!isLandscape) {
+        ThumbnailHeader(
+            queueTitle = queueTitle,
+            albumTitle = mediaMetadata?.album?.title,
+            textColor = textBackgroundColor,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .statusBarsPadding()
+        )
+    }
+}
         }
 
         // Seek effect
