@@ -48,6 +48,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
@@ -442,6 +445,9 @@ private fun ThumbnailHeader(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
+            .background(color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.4f), shape = RoundedCornerShape(16.dp))
+            .padding(horizontal = 16.dp, vertical = 8.dp) 
+        )
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -559,6 +565,19 @@ private fun ThumbnailItem(
                 Modifier.fillMaxSize()
             }
         )
+        .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+                .drawWithContent {
+                    drawContent()
+                    drawRect(
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                            0f to Color.Transparent,
+                            0.15f to Color.Black,
+                            0.95f to Color.Black,
+                            1f to Color.Transparent
+                        ),
+                        blendMode = androidx.compose.ui.graphics.BlendMode.DstIn
+                    )
+                }
         .clip(RoundedCornerShape(dimensions.cornerRadius))
         )
         
