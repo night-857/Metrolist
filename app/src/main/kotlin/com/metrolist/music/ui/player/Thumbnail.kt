@@ -327,20 +327,11 @@ fun Thumbnail(
                 .fillMaxSize()
                 .then(if (!isLandscape) Modifier.statusBarsPadding() else Modifier),
         ) {
-            Column(
+            Box(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = if (isLandscape) Arrangement.Center else Arrangement.Top
             ) {
-                // Now Playing header - hide in landscape mode
-                if (!isLandscape) {
-                    ThumbnailHeader(
-                        queueTitle = queueTitle,
-                        albumTitle = mediaMetadata?.album?.title,
-                        textColor = textBackgroundColor
-                    )
-                }
-                
                 // Thumbnail content
                 BoxWithConstraints(
                     contentAlignment = Alignment.Center,
@@ -406,6 +397,15 @@ fun Thumbnail(
                             )
                         }
                     }
+                }
+                
+                // Now Playing header - hide in landscape mode
+                if (!isLandscape) {
+                    ThumbnailHeader(
+                        queueTitle = queueTitle,
+                        albumTitle = mediaMetadata?.album?.title,
+                        textColor = textBackgroundColor
+                    )
                 }
             }
         }
@@ -517,7 +517,6 @@ private fun ThumbnailItem(
                         .fillMaxSize()
                 }
             )
-            .padding(horizontal = PlayerHorizontalPadding)
             .graphicsLayer {
                 // Render entire thumbnail item on separate hardware layer for smooth animations
                 compositingStrategy = CompositingStrategy.Offscreen
