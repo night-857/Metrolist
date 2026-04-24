@@ -445,14 +445,16 @@ private fun ThumbnailHeader(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-        )
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(horizontal = 48.dp)
-                .background(color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.4f), shape = RoundedCornerShape(16.dp))
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.4f), 
+                    shape = RoundedCornerShape(16.dp)
+                )
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             // Listen Together indicator
@@ -469,6 +471,7 @@ private fun ThumbnailHeader(
                     color = textColor
                 )
             }
+            
             val playingFrom = queueTitle ?: albumTitle
             if (!playingFrom.isNullOrBlank()) {
                 Spacer(modifier = Modifier.height(4.dp))
@@ -483,6 +486,7 @@ private fun ThumbnailHeader(
         }
     }
 }
+
 
 /**
  * Individual thumbnail item in the carousel.
