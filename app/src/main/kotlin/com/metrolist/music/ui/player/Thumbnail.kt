@@ -124,13 +124,13 @@ private fun calculateThumbnailDimensions(
     val effectiveSize = if (isLandscape) {
         minOf(containerWidth, containerHeight) - (horizontalPadding * 2)
     } else {
-        containerWidth - (horizontalPadding * 2)
+        containerHeight
     }
     return ThumbnailDimensions(
         itemWidth = containerWidth,
         containerSize = containerWidth,
         thumbnailSize = effectiveSize,
-        cornerRadius = cornerRadius * 7
+        cornerRadius = cornerRadius
     )
 }
 
@@ -556,10 +556,18 @@ private fun ThumbnailItem(
         contentAlignment = Alignment.Center
     ) {
         Box(
-            modifier = Modifier
-                .size(dimensions.thumbnailSize)
-                .clip(RoundedCornerShape(dimensions.cornerRadius))
-        ) {
+    modifier = Modifier
+        .then(
+            if (isLandscape) {
+                Modifier.size(dimensions.thumbnailSize)
+            } else {
+                Modifier.fillMaxSize()
+            }
+        )
+        .clip(RoundedCornerShape(dimensions.cornerRadius))
+        )
+        
+          {
             if (hidePlayerThumbnail) {
                 HiddenThumbnailPlaceholder(textBackgroundColor = textBackgroundColor)
             } else {
@@ -635,7 +643,7 @@ private fun ThumbnailImage(
                 .networkCachePolicy(CachePolicy.ENABLED)
                 .build(),
             contentDescription = null,
-            contentScale = if (cropArtwork) ContentScale.Crop else ContentScale.Fit,
+            contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
     }
