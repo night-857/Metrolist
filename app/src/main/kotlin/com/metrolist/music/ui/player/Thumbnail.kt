@@ -72,6 +72,8 @@ import androidx.media3.common.Player
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.Precision
+import coil3.size.Size
 import com.metrolist.music.LocalListenTogetherManager
 import com.metrolist.music.LocalPlayerConnection
 import com.metrolist.music.R
@@ -575,8 +577,8 @@ private fun ThumbnailItem(
                     drawRect(
                         brush = androidx.compose.ui.graphics.Brush.verticalGradient(
                             0f to Color.Transparent,
-                            0.15f to Color.Black,
-                            0.95f to Color.Black,
+                            0.20f to Color.Black,
+                            0.80f to Color.Black,
                             1f to Color.Transparent
                         ),
                         blendMode = androidx.compose.ui.graphics.BlendMode.DstIn
@@ -656,6 +658,8 @@ private fun ThumbnailImage(
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(artworkUri)
+                .size(coil3.size.Size.ORIGINAL)
+                .precision(coil3.request.Precision.EXACT)
                 .memoryCachePolicy(CachePolicy.ENABLED)
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .networkCachePolicy(CachePolicy.ENABLED)
