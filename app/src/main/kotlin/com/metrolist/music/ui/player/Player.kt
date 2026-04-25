@@ -795,16 +795,15 @@ fun BottomSheetPlayer(
 
     val backgroundAlpha = state.progress.coerceIn(0f, 1f)
 
-    val backgroundMaterialGradient = remember(
-    MaterialTheme.colorScheme.surfaceBright,
-    MaterialTheme.colorScheme.surface
-) {
-    Brush.verticalGradient(
-        0f to MaterialTheme.colorScheme.surfaceBright,
-        0.6f to MaterialTheme.colorScheme.surfaceBright,
-        1f to MaterialTheme.colorScheme.surface
-    )
-}
+    val surfaceBright = MaterialTheme.colorScheme.surfaceBright
+    val surface = MaterialTheme.colorScheme.surface
+    val backgroundMaterialGradient = remember(surfaceBright, surface) {
+        Brush.verticalGradient(
+            0f to surfaceBright,
+            0.6f to surfaceBright,
+            1f to surface
+        )
+    }
 
     BottomSheet(
         state = state,
