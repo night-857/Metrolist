@@ -778,20 +778,24 @@ fun BottomSheetPlayer(
             initialAnchor = 1,
         )
 
-    val bottomSheetBackgroundColor =
-        when (playerBackground) {
-            PlayerBackgroundStyle.BLUR, PlayerBackgroundStyle.GRADIENT -> {
-                MaterialTheme.colorScheme.surface
-            }
-
-            else -> {
-                if (useBlackBackground) {
-                    Color.Black
-                } else {
-                    MaterialTheme.colorScheme.surface
-                }
-            }
+    // Mudando o conteúdo da val, mas mantendo o nome
+val bottomSheetBackgroundColor = when (playerBackground) {
+    PlayerBackgroundStyle.BLUR, PlayerBackgroundStyle.GRADIENT -> {
+        Brush.verticalGradient(listOf(MaterialTheme.colorScheme.surface, MaterialTheme.colorScheme.surface))
+    }
+    else -> {
+        if (useBlackBackground) {
+            Brush.verticalGradient(listOf(Color.Black, Color.Black))
+        } else {
+            Brush.verticalGradient(
+                0f to MaterialTheme.colorScheme.surfaceBright,
+                0.6f to MaterialTheme.colorScheme.surfaceBright,
+                1f to MaterialTheme.colorScheme.surface
+            )
         }
+    }
+}
+
 
     val backgroundAlpha = state.progress.coerceIn(0f, 1f)
 
